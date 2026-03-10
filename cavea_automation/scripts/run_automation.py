@@ -99,11 +99,11 @@ def update_excel_tracking():
             values = [
                 topic["id"],
                 topic["short_tail"],
-                topic["title_1"],
+                topic["title"],
                 topic["slug"],
                 status_text,
                 pub_date,
-                topic["keyword_focus_1"]
+                topic["keyword_focus"]
             ]
 
             for col, value in enumerate(values, 1):

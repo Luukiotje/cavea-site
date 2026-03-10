@@ -83,12 +83,12 @@ def build_blog_card(topic, image_url, meta_description, publish_date, tag="Inves
     <a href="{slug_url}" class="bl-lg-link" style="text-decoration:none;color:inherit;display:block">
       <div class="bl-lg rv {delay_class}">
         <div class="bl-lg-img-wrap">
-          <img class="bl-lg-img" src="{image_url}" alt="{topic['title_1']}" loading="lazy">
+          <img class="bl-lg-img" src="{image_url}" alt="{topic['title']}" loading="lazy">
         </div>
         <div class="bl-lg-body">
           <span class="bl-tag">{tag}</span>
           <div class="bl-meta"><span>{date_nl}</span><span>8 min leestijd</span></div>
-          <h2>{topic['title_1']}</h2>
+          <h2>{topic['title']}</h2>
           <p>{meta_description}</p>
           <span class="bl-read">Lees het artikel →</span>
         </div>
@@ -117,7 +117,7 @@ def update_blog_index(topic, image_url, meta_description, publish_date, tag="Inv
     return push_file(
         "blog.html",
         updated_html,
-        f"Blog index bijgewerkt: '{topic['title_1']}'"
+        f"Blog index bijgewerkt: '{topic['title']}'"
     )
 
 
@@ -137,8 +137,8 @@ def build_index_blog_card(topic, image_url, meta_description, tag="Investering")
     slug_url = f"{BLOG_FOLDER}/{topic['slug']}.html"
     return f"""<div class="bl-c rv rv-d1">
                 <a href="{slug_url}" style="text-decoration:none;color:inherit;display:block">
-                <div class="bl-img-wrap"><img class="bl-c-img" src="{image_url}" alt="{topic['title_1']}" loading="lazy"></div>
-                <div class="bl-body"><p class="bl-tag">{tag}</p><h3>{topic['title_1']}</h3><p>{meta_description}</p><span style="color:var(--gold);font-size:.72rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase">Lees meer →</span></div>
+                <div class="bl-img-wrap"><img class="bl-c-img" src="{image_url}" alt="{topic['title']}" loading="lazy"></div>
+                <div class="bl-body"><p class="bl-tag">{tag}</p><h3>{topic['title']}</h3><p>{meta_description}</p><span style="color:var(--gold);font-size:.72rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase">Lees meer →</span></div>
                 </a>
             </div>"""
 
@@ -188,7 +188,7 @@ def update_index_blog_section(topic, image_url, meta_description, tag="Investeri
     return push_file(
         "index.html",
         updated_html,
-        f"Homepage blog bijgewerkt: '{topic['title_1']}'"
+        f"Homepage blog bijgewerkt: '{topic['title']}'"
     )
 
 
@@ -202,9 +202,9 @@ def publish_post(topic, html_content, image_url, meta_description, tag="Invester
     publish_date = datetime.date.today().isoformat()
     file_path    = f"{BLOG_FOLDER}/{topic['slug']}.html"
 
-    print(f"\nPubliceer naar GitHub: '{topic['title_1']}'")
+    print(f"\nPubliceer naar GitHub: '{topic['title']}'")
 
-    success = push_file(file_path, html_content, f"Nieuwe blogpost: {topic['title_1']}")
+    success = push_file(file_path, html_content, f"Nieuwe blogpost: {topic['title']}")
 
     if success:
         update_blog_index(topic, image_url, meta_description, publish_date, tag)

@@ -171,8 +171,8 @@ def generate_blog_content(topic, retries=3):
 een premium wijninvesteringsbedrijf met een donker, luxueus design.
 
 ONDERWERP: {topic['short_tail']}
-FOCUSTITEL: {topic['title_1']}
-KEYWORD FOCUS: {topic['keyword_focus_1']}
+FOCUSTITEL: {topic['title']}
+KEYWORD FOCUS: {topic['keyword_focus']}
 
 TOON & STIJL:
 - Professioneel, luxueus en deskundig — zoals een exclusief wijnmagazijn
@@ -211,7 +211,7 @@ Alleen de HTML-inhoud voor binnen <div class="post-body"> — dus alleen <h2>, <
 [/CONTENT]
 """
 
-    print(f"  Claude schrijft: '{topic['title_1']}'...")
+    print(f"  Claude schrijft: '{topic['title']}'...")
     for attempt in range(1, retries + 1):
         try:
             message = client.messages.create(
@@ -258,12 +258,12 @@ def build_html_page(topic, parsed, image, publish_date):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{topic['title_1']} — Cavea</title>
+  <title>{topic['title']} — Cavea</title>
   <meta name="description" content="{parsed['meta_description']}">
   <link rel="canonical" href="{SITE_URL}/{BLOG_FOLDER}/{topic['slug']}.html" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="{topic['title_1']}">
+  <meta property="og:title" content="{topic['title']}">
   <meta property="og:description" content="{parsed['meta_description']}">
   <meta property="og:image" content="{image['url']}">
   <meta property="og:url" content="{SITE_URL}/{BLOG_FOLDER}/{topic['slug']}.html">
@@ -272,7 +272,7 @@ def build_html_page(topic, parsed, image, publish_date):
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{topic['title_1']}">
+  <meta name="twitter:title" content="{topic['title']}">
   <meta name="twitter:description" content="{parsed['meta_description']}">
   <meta name="twitter:image" content="{image['url']}">
 
@@ -281,7 +281,7 @@ def build_html_page(topic, parsed, image, publish_date):
   {{
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "{topic['title_1']}",
+    "headline": "{topic['title']}",
     "description": "{parsed['meta_description']}",
     "image": "{image['url']}",
     "author": {{"@type": "Organization", "name": "Cavea"}},
@@ -366,7 +366,7 @@ def build_html_page(topic, parsed, image, publish_date):
 
 <div class="post-header">
   <span class="post-tag">{parsed['tag']}</span>
-  <h1 class="post-title">{topic['title_1']}</h1>
+  <h1 class="post-title">{topic['title']}</h1>
   <div class="post-meta">
     <span>{date_nl}</span>
     <span>Door Cavea</span>
@@ -411,7 +411,7 @@ def generate_one_post():
         print("Alle blogposts zijn al gepubliceerd!")
         return None
 
-    print(f"\nVolgende blogpost: '{topic['title_1']}'")
+    print(f"\nVolgende blogpost: '{topic['title']}'")
 
     # Fetch a unique image using the topic's short_tail keyword
     image = fetch_wine_image(topic['short_tail'])
