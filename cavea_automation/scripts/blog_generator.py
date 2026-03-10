@@ -66,7 +66,13 @@ def fetch_wine_image(query="fine wine cellar bordeaux"):
     }
 
 
-def generate_blog_content(topic):
+def generate_blog_content(topic, retries=3):
+    """
+    Calls Claude API to write the blog post.
+    If Anthropic's servers have a temporary hiccup (500 error),
+    it automatically tries again up to 3 times before giving up.
+    """
+    import time
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
     prompt = f"""Schrijf een volledig SEO-geoptimaliseerd blogartikel in het Nederlands voor Cavea,
@@ -114,12 +120,22 @@ Alleen de HTML-inhoud voor binnen <div class="post-body"> — dus alleen <h2>, <
 """
 
     print(f"  Claude schrijft: '{topic['title_1']}'...")
-    message = client.messages.create(
-        model="claude-opus-4-5",
-        max_tokens=4000,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return message.content[0].text
+    for attempt in range(1, retries + 1):
+        try:
+            message = client.messages.create(
+                model="claude-opus-4-5",
+                max_tokens=4000,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return message.content[0].text
+        except Exception as e:
+            print(f"  Poging {attempt}/{retries} mislukt: {e}")
+            if attempt < retries:
+                wait = attempt * 15  # wait 15s, then 30s before retry
+                print(f"  Wacht {wait} seconden en probeert opnieuw...")
+                time.sleep(wait)
+            else:
+                raise
 
 
 def parse_claude_response(raw_text):
