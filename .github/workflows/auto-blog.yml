@@ -58,6 +58,7 @@ jobs:
       # (This keeps your API keys safe — never stored in code)
       - name: 🔐 Create config from secrets
         run: |
+        mkdir -p cavea_automation
           cat > cavea_automation/config.json << EOF
           {
             "anthropic_api_key": "${{ secrets.ANTHROPIC_API_KEY }}",
