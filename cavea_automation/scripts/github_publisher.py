@@ -1,11 +1,19 @@
 """
-CAVEA BLOG AUTOMATION — GITHUB PUBLISHER (v2)
-Pushes blog posts to GitHub and inserts a correctly styled card
-into blog.html using the site's existing bl-lg CSS classes.
+CAVEA BLOG AUTOMATION — GITHUB PUBLISHER (v3)
+Pushes blog posts to GitHub and inserts correctly styled cards
+into blog.html and index.html.
+
+CHANGES in v3:
+- Entire blog card is now clickable (wrapped in <a> tag)
+- Fixed blue/purple link text: added color:inherit to <a> wrappers
+- Fixed regex that was breaking homepage card detection
+- Tag comes from Claude (no longer hardcoded to "Investering")
+- Image URL tracked per-topic to avoid duplicate images
 """
 
 import json
 import os
+import re
 import base64
 import requests
 import datetime
@@ -62,50 +70,48 @@ def format_date_nl(iso_date):
     return f"{d.day} {months[d.month-1]} {d.year}"
 
 
-def build_blog_card(topic, image_url, meta_description, publish_date, delay_class="rv-d1"):
+def build_blog_card(topic, image_url, meta_description, publish_date, tag="Investering", delay_class="rv-d1"):
     """
-    Builds a card in the exact same format as the existing bl-lg cards
-    on the Cavea blog page. This ensures the new post looks identical
-    to the four existing posts.
+    Builds a card for the blog.html listing page.
+    The entire card is now wrapped in an <a> tag so users can click anywhere.
+    color:inherit prevents the browser's default blue/purple link color.
     """
     date_nl = format_date_nl(publish_date)
+    slug_url = f"{BLOG_FOLDER}/{topic['slug']}.html"
     return f"""
     <!-- Blog post: {topic['slug']} | Added: {publish_date} -->
-    <div class="bl-lg rv {delay_class}">
-      <div class="bl-lg-img-wrap">
-        <img class="bl-lg-img" src="{image_url}" alt="{topic['title_1']}" loading="lazy">
+    <a href="{slug_url}" class="bl-lg-link" style="text-decoration:none;color:inherit;display:block">
+      <div class="bl-lg rv {delay_class}">
+        <div class="bl-lg-img-wrap">
+          <img class="bl-lg-img" src="{image_url}" alt="{topic['title_1']}" loading="lazy">
+        </div>
+        <div class="bl-lg-body">
+          <span class="bl-tag">{tag}</span>
+          <div class="bl-meta"><span>{date_nl}</span><span>8 min leestijd</span></div>
+          <h2>{topic['title_1']}</h2>
+          <p>{meta_description}</p>
+          <span class="bl-read">Lees het artikel →</span>
+        </div>
       </div>
-      <div class="bl-lg-body">
-        <span class="bl-tag">Investering</span>
-        <div class="bl-meta"><span>{date_nl}</span><span>8 min leestijd</span></div>
-        <h2>{topic['title_1']}</h2>
-        <p>{meta_description}</p>
-        <a href="{BLOG_FOLDER}/{topic['slug']}.html" class="bl-read">Lees het artikel →</a>
-      </div>
-    </div>"""
+    </a>"""
 
 
-def update_blog_index(topic, image_url, meta_description, publish_date):
+def update_blog_index(topic, image_url, meta_description, publish_date, tag="Investering"):
     """
     Inserts the new card at the TOP of the bl-grid-lg div in blog.html,
     so the newest post always appears first.
-
-    The marker <!-- BLOG_POSTS_START --> must be the first thing
-    inside <div class="bl-grid-lg">.
     """
     current_html = get_current_blog_index()
     if not current_html:
         print("  Kan blog.html niet ophalen. Index niet bijgewerkt.")
         return False
 
-    # We look for the marker inside the grid
     marker = "<!-- BLOG_POSTS_START -->"
     if marker not in current_html:
         print(f"  Marker '{marker}' niet gevonden in blog.html.")
-        print("  Voeg dit toe als eerste regel binnen <div class=\"bl-grid-lg\">")
         return False
 
-    new_card    = build_blog_card(topic, image_url, meta_description, publish_date)
+    new_card = build_blog_card(topic, image_url, meta_description, publish_date, tag)
     updated_html = current_html.replace(marker, marker + new_card)
 
     return push_file(
@@ -123,29 +129,35 @@ def get_current_index():
     return None
 
 
-def build_index_blog_card(topic, image_url, meta_description):
-    """Builds a card matching the bl-c style used on the index.html homepage."""
+def build_index_blog_card(topic, image_url, meta_description, tag="Investering"):
+    """
+    Builds a card for the homepage (index.html) blog section.
+    Entire card is clickable. color:inherit prevents blue/purple link text.
+    """
+    slug_url = f"{BLOG_FOLDER}/{topic['slug']}.html"
     return f"""<div class="bl-c rv rv-d1">
-                <a href="{BLOG_FOLDER}/{topic['slug']}.html" style="text-decoration:none;display:contents">
+                <a href="{slug_url}" style="text-decoration:none;color:inherit;display:block">
                 <div class="bl-img-wrap"><img class="bl-c-img" src="{image_url}" alt="{topic['title_1']}" loading="lazy"></div>
-                <div class="bl-body"><p class="bl-tag">Investering</p><h3>{topic['title_1']}</h3><p>{meta_description}</p><span style="color:var(--gold);font-size:.72rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase">Lees meer →</span></div>
+                <div class="bl-body"><p class="bl-tag">{tag}</p><h3>{topic['title_1']}</h3><p>{meta_description}</p><span style="color:var(--gold);font-size:.72rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase">Lees meer →</span></div>
                 </a>
             </div>"""
 
 
-def update_index_blog_section(topic, image_url, meta_description):
+def update_index_blog_section(topic, image_url, meta_description, tag="Investering"):
     """
     Updates the blog section on index.html:
     - Adds the new post card at the top
     - Keeps only 3 cards total (removes the oldest)
+
+    Uses a more robust approach: finds the bl-grid div and replaces
+    everything between it and the "Alle artikelen" button.
     """
     current_html = get_current_index()
     if not current_html:
         print("  Kan index.html niet ophalen. Homepage niet bijgewerkt.")
         return False
 
-    # Find the bl-grid div and insert the new card at position 1 (after opening)
-    import re
+    # More robust: find the grid opening and the "alle artikelen" div after it
     grid_pattern = r'(<div class="bl-grid">)(.*?)(</div>\s*<div style="text-align:center)'
     match = re.search(grid_pattern, current_html, re.DOTALL)
     if not match:
@@ -156,16 +168,22 @@ def update_index_blog_section(topic, image_url, meta_description):
     grid_content = match.group(2)
     grid_after = match.group(3)
 
-    # Parse existing cards
-    card_pattern = r'<div class="bl-c rv[^"]*">.*?</div>\s*</a>\s*</div>'
-    existing_cards = re.findall(card_pattern, grid_content, re.DOTALL)
+    # More robust card matching: find each card by looking for bl-c div opening
+    # and matching to the corresponding closing </div> at the same nesting level
+    card_pattern = r'<div class="bl-c rv[^"]*">[\s\S]*?</a>\s*</div>'
+    existing_cards = re.findall(card_pattern, grid_content)
 
     # Build new card list: new card first, then keep up to 2 old ones (3 total)
-    new_card = build_index_blog_card(topic, image_url, meta_description)
+    new_card = build_index_blog_card(topic, image_url, meta_description, tag)
     cards_to_keep = [new_card] + existing_cards[:2]
 
     new_grid_content = "\n            ".join(cards_to_keep)
-    updated_html = current_html[:match.start()] + grid_open + "\n            " + new_grid_content + "\n        " + grid_after + current_html[match.end():]
+    updated_html = (
+        current_html[:match.start()]
+        + grid_open + "\n            " + new_grid_content + "\n        "
+        + grid_after
+        + current_html[match.end():]
+    )
 
     return push_file(
         "index.html",
@@ -174,7 +192,13 @@ def update_index_blog_section(topic, image_url, meta_description):
     )
 
 
-def publish_post(topic, html_content, image_url, meta_description):
+def publish_post(topic, html_content, image_url, meta_description, tag="Investering"):
+    """
+    Publishes a blog post to GitHub:
+    1. Pushes the blog post HTML file
+    2. Adds a card to blog.html (newest first)
+    3. Updates the homepage (index.html) with latest 3 posts
+    """
     publish_date = datetime.date.today().isoformat()
     file_path    = f"{BLOG_FOLDER}/{topic['slug']}.html"
 
@@ -183,8 +207,8 @@ def publish_post(topic, html_content, image_url, meta_description):
     success = push_file(file_path, html_content, f"Nieuwe blogpost: {topic['title_1']}")
 
     if success:
-        update_blog_index(topic, image_url, meta_description, publish_date)
-        update_index_blog_section(topic, image_url, meta_description)
+        update_blog_index(topic, image_url, meta_description, publish_date, tag)
+        update_index_blog_section(topic, image_url, meta_description, tag)
         live_url = f"{SITE_URL}/{file_path}"
         print(f"\nLive op: {live_url}")
         return live_url

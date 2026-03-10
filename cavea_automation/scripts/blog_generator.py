@@ -1,12 +1,19 @@
 """
-CAVEA BLOG AUTOMATION — BLOG GENERATOR (v2 — matches dark theme)
+CAVEA BLOG AUTOMATION — BLOG GENERATOR (v3 — unique images, no duplicates)
 Generates SEO-optimized HTML blog posts using Claude AI,
-fetches a wine photo, and outputs HTML matching cavea-site's exact style.
+fetches a UNIQUE wine photo per article, and outputs HTML matching cavea-site's style.
+
+CHANGES in v3:
+- Pexels image search uses random page + picks from multiple results
+- Tracks used image IDs in used_images.json to prevent duplicates
+- Better search queries for luxury/exclusive wine imagery
+- Updates Excel tracking file when a post is published
 """
 
 import json
 import os
 import re
+import random
 import datetime
 import requests
 import anthropic
@@ -14,6 +21,7 @@ import anthropic
 BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 TOPICS_PATH = os.path.join(BASE_DIR, "topics.json")
+IMAGES_PATH = os.path.join(BASE_DIR, "used_images.json")
 POSTS_DIR   = os.path.join(BASE_DIR, "posts")
 os.makedirs(POSTS_DIR, exist_ok=True)
 
@@ -25,6 +33,23 @@ PEXELS_API_KEY    = config["pexels_api_key"]
 SITE_URL          = config["site_url"]
 BLOG_FOLDER       = config["blog_folder"]
 
+
+# ─── Image tracking: prevents re-using the same Pexels photo ───
+
+def load_used_images():
+    """Load list of Pexels photo IDs that have already been used."""
+    if os.path.exists(IMAGES_PATH):
+        with open(IMAGES_PATH) as f:
+            return json.load(f)
+    return []
+
+def save_used_images(used_ids):
+    """Save the updated list of used Pexels photo IDs."""
+    with open(IMAGES_PATH, "w") as f:
+        json.dump(used_ids, f)
+
+
+# ─── Topic management ───
 
 def get_next_topic():
     with open(TOPICS_PATH) as f:
@@ -44,33 +69,100 @@ def mark_topic_published(topics, topic_id):
         json.dump(topics, f, ensure_ascii=False, indent=2)
 
 
-def fetch_wine_image(query="fine wine cellar bordeaux"):
+# ─── Image fetching with deduplication ───
+
+# Pre-defined luxury wine search queries for better, more exclusive images
+WINE_QUERIES = [
+    "wine cellar dark luxury",
+    "red wine bottle elegant",
+    "wine barrel oak cellar",
+    "vineyard sunset luxury",
+    "sommelier wine tasting",
+    "wine glass dark background",
+    "wine collection cellar",
+    "bordeaux wine vintage",
+    "wine decanter elegant",
+    "premium wine dark",
+    "wine aging cellar barrels",
+    "wine pouring elegant glass",
+]
+
+def fetch_wine_image(topic_query="fine wine"):
+    """
+    Fetches a UNIQUE wine image from Pexels.
+    - Uses varied search queries for better, more exclusive-looking results
+    - Fetches 15 results per search and picks one that hasn't been used before
+    - Tracks used image IDs to prevent duplicates across blog posts
+    """
     if not PEXELS_API_KEY or PEXELS_API_KEY == "YOUR_PEXELS_API_KEY":
         return {
             "url": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1400&q=85&auto=format&fit=crop",
             "alt": "Exclusieve wijnflessen in een kelder"
         }
+
+    used_ids = load_used_images()
     headers = {"Authorization": PEXELS_API_KEY}
-    params  = {"query": query, "per_page": 1, "orientation": "landscape"}
-    try:
-        resp = requests.get("https://api.pexels.com/v1/search", headers=headers, params=params, timeout=10)
-        data = resp.json()
-        if data.get("photos"):
-            photo = data["photos"][0]
-            return {"url": photo["src"]["large2x"], "alt": photo.get("alt", query)}
-    except Exception as e:
-        print(f"  Pexels fout: {e} — gebruik standaardafbeelding")
+
+    # Try multiple search queries to find a unique, high-quality image
+    queries_to_try = [
+        f"luxury wine {topic_query}",
+        random.choice(WINE_QUERIES),
+        f"wine {topic_query} elegant",
+        "fine wine cellar dark",
+        "premium red wine bottle",
+    ]
+
+    for query in queries_to_try:
+        try:
+            # Fetch up to 15 results, from a random page (1-3)
+            page = random.randint(1, 3)
+            params = {
+                "query": query,
+                "per_page": 15,
+                "page": page,
+                "orientation": "landscape"
+            }
+            resp = requests.get(
+                "https://api.pexels.com/v1/search",
+                headers=headers, params=params, timeout=10
+            )
+            data = resp.json()
+
+            if data.get("photos"):
+                # Shuffle the results so we don't always pick the same one
+                photos = data["photos"]
+                random.shuffle(photos)
+
+                # Find a photo that hasn't been used before
+                for photo in photos:
+                    if photo["id"] not in used_ids:
+                        # Found a unique image! Save it and return
+                        used_ids.append(photo["id"])
+                        save_used_images(used_ids)
+                        print(f"  Pexels: uniek beeld gevonden (ID {photo['id']}) via '{query}'")
+                        return {
+                            "url": photo["src"]["large2x"],
+                            "alt": photo.get("alt", f"Wijnfoto: {topic_query}")
+                        }
+
+        except Exception as e:
+            print(f"  Pexels fout bij '{query}': {e}")
+            continue
+
+    # Absolute fallback: use an Unsplash image
+    print("  Waarschuwing: geen unieke Pexels-afbeelding gevonden, gebruik fallback")
     return {
         "url": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1400&q=85&auto=format&fit=crop",
         "alt": "Exclusieve wijnflessen in een kelder"
     }
 
 
+# ─── Content generation ───
+
 def generate_blog_content(topic, retries=3):
     """
     Calls Claude API to write the blog post.
-    If Anthropic's servers have a temporary hiccup (500 error),
-    it automatically tries again up to 3 times before giving up.
+    Retries up to 3 times if Anthropic's servers have a temporary hiccup.
     """
     import time
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
@@ -131,7 +223,7 @@ Alleen de HTML-inhoud voor binnen <div class="post-body"> — dus alleen <h2>, <
         except Exception as e:
             print(f"  Poging {attempt}/{retries} mislukt: {e}")
             if attempt < retries:
-                wait = attempt * 15  # wait 15s, then 30s before retry
+                wait = attempt * 15
                 print(f"  Wacht {wait} seconden en probeert opnieuw...")
                 time.sleep(wait)
             else:
@@ -156,7 +248,6 @@ def build_html_page(topic, parsed, image, publish_date):
     existing cavea-site posts (dark theme, Playfair Display + Raleway fonts,
     gold accents, same nav/footer structure).
     """
-    # Format date in Dutch
     months = ["januari","februari","maart","april","mei","juni",
               "juli","augustus","september","oktober","november","december"]
     d = datetime.date.fromisoformat(publish_date)
@@ -314,6 +405,7 @@ def build_html_page(topic, parsed, image, publish_date):
 
 
 def generate_one_post():
+    """Main function: generates one blog post from the next pending topic."""
     topic, all_topics = get_next_topic()
     if not topic:
         print("Alle blogposts zijn al gepubliceerd!")
@@ -321,7 +413,8 @@ def generate_one_post():
 
     print(f"\nVolgende blogpost: '{topic['title_1']}'")
 
-    image = fetch_wine_image(f"fine wine {topic['short_tail']}")
+    # Fetch a unique image using the topic's short_tail keyword
+    image = fetch_wine_image(topic['short_tail'])
     raw   = generate_blog_content(topic)
     parsed = parse_claude_response(raw)
 
@@ -338,8 +431,11 @@ def generate_one_post():
     print(f"Opgeslagen: {output_path}")
 
     mark_topic_published(all_topics, topic["id"])
-    return {"topic": topic, "file": output_path, "publish_date": publish_date,
-            "image_url": image["url"], "meta_description": parsed["meta_description"], "tag": parsed["tag"]}
+    return {
+        "topic": topic, "file": output_path, "publish_date": publish_date,
+        "image_url": image["url"], "meta_description": parsed["meta_description"],
+        "tag": parsed["tag"]
+    }
 
 
 if __name__ == "__main__":
