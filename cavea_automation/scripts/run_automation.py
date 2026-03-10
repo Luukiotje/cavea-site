@@ -154,7 +154,7 @@ def run(topic_id=None, dry_run=False):
             print("✅ Alle geplande blogposts zijn al gepubliceerd!")
             return
 
-    print(f"\n📋 Onderwerp: {topic['title_1']}")
+    print(f"\n📋 Onderwerp: {topic['title']}")
     print(f"   Slug:      {topic['slug']}")
     print(f"   Status:    {topic.get('status', 'pending')}")
 
