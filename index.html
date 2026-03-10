@@ -537,8 +537,8 @@
         </div>
         <div class="su-ok" id="signupSuccess">
             <div class="chk">&#10003;</div>
-            <h3>Welkom bij Cavea.</h3>
-            <p>U staat op de lijst. Wij nemen spoedig contact op met exclusieve toegang.</p>
+            <h3>Informatie ontvangen</h3>
+            <p>Bedankt voor uw interesse. U staat op de lijst — wij nemen spoedig contact op met exclusieve toegang tot Cavea.</p>
         </div>
     </div>
 </section>
@@ -564,19 +564,30 @@ const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.ta
 document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
 setTimeout(()=>{document.querySelectorAll('.rv').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0)el.classList.add('vis')})},50);
 
+/* IMPORTANT: Replace this URL with your Google Apps Script deployment URL */
+const SIGNUP_ENDPOINT='PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
 function handleSignup(){
     const f=document.getElementById('fname').value.trim();
     const l=document.getElementById('lname').value.trim();
     const e=document.getElementById('email').value.trim();
     const p=document.getElementById('profile').value;
     const err=document.getElementById('signupError');
+    const btn=document.querySelector('.su-btn');
     err.classList.remove('active');err.textContent='';
     if(!f||!l){err.textContent='Vul alstublieft uw voor- en achternaam in.';err.classList.add('active');return}
     if(!e||!e.includes('@')||!e.includes('.')){err.textContent='Vul alstublieft een geldig e-mailadres in.';err.classList.add('active');return}
     if(!p){err.textContent='Selecteer alstublieft uw profiel.';err.classList.add('active');return}
-    console.log('Cavea signup:',{fname:f,lname:l,email:e,profile:p,ts:new Date().toISOString()});
-    document.getElementById('signupForm').style.display='none';
-    const s=document.getElementById('signupSuccess');s.classList.add('active');s.style.display='block';
+    btn.textContent='Even geduld...';btn.disabled=true;
+    fetch(SIGNUP_ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({fname:f,lname:l,email:e,profile:p})})
+    .then(()=>{
+        document.getElementById('signupForm').style.display='none';
+        const s=document.getElementById('signupSuccess');s.classList.add('active');s.style.display='block';
+    })
+    .catch(()=>{
+        err.textContent='Er ging iets mis. Probeer het opnieuw.';err.classList.add('active');
+        btn.textContent='Vraag toegang aan';btn.disabled=false;
+    });
 }
 
 document.querySelectorAll
