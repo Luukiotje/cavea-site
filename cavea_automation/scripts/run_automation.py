@@ -80,7 +80,7 @@ def run(topic_id=None, dry_run=False):
         return
 
     print(f"   Meta description: {parsed['meta_description'][:60]}...")
-    print(f"   Keywords: {parsed['keywords'][:60]}...")
+    print(f"   Categorie: {parsed['tag']}")
 
     # 4. Build HTML
     publish_date = datetime.date.today().isoformat()
