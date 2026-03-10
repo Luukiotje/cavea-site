@@ -168,8 +168,8 @@
         .ft-bot{max-width:1280px;margin:3.5rem auto 0;padding-top:2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
 
         /* ANIMATIONS */
-        .rv{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
-        .rv.vis{opacity:1;transform:translateY(0)}
+        .js-ready .rv{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+        .js-ready .rv.vis{opacity:1;transform:translateY(0)}
         .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}.rv-d5{transition-delay:.5s}
 
         /* TESTIMONIALS */
@@ -552,10 +552,10 @@ const nav=document.getElementById('navbar');
 let t=false;
 window.addEventListener('scroll',()=>{if(!t){requestAnimationFrame(()=>{nav.classList.toggle('scrolled',window.scrollY>60);t=false});t=true}});
 
-const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');ro.unobserve(en.target)}})},{threshold:0.05,rootMargin:'0px 0px 0px 0px'});
+document.body.classList.add('js-ready');
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');ro.unobserve(en.target)}})},{threshold:0.05});
 document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
-// Immediately reveal elements already visible on load
-setTimeout(()=>{document.querySelectorAll('.rv').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0)el.classList.add('vis')})},100);
+setTimeout(()=>{document.querySelectorAll('.rv').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0)el.classList.add('vis')})},50);
 
 function handleSignup(){
     const f=document.getElementById('fname').value.trim();
