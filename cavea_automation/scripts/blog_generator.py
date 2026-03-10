@@ -123,7 +123,7 @@ Alleen de HTML-inhoud voor binnen <div class="post-body"> — dus alleen <h2>, <
     for attempt in range(1, retries + 1):
         try:
             message = client.messages.create(
-                model="claude-sonnet-4-5-20241022",
+                model="claude-sonnet-4-5",
                 max_tokens=4000,
                 messages=[{"role": "user", "content": prompt}]
             )
