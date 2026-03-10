@@ -565,7 +565,7 @@ document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
 setTimeout(()=>{document.querySelectorAll('.rv').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0)el.classList.add('vis')})},50);
 
 /* IMPORTANT: Replace this URL with your Google Apps Script deployment URL */
-const SIGNUP_ENDPOINT='PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const SIGNUP_ENDPOINT='https://script.google.com/macros/s/AKfycbxKp1SgWGshd6yzxdEo0uT2cylK5UDOxE4O6tUp0_ERnhls_nbjKEMjRijXdLCH8n0xdA/exec';
 
 function handleSignup(){
     const f=document.getElementById('fname').value.trim();
