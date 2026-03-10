@@ -1,0 +1,95 @@
+# =============================================================
+#  CAVEA BLOG AUTOMATION — GITHUB ACTIONS WORKFLOW
+#  This file tells GitHub to automatically run your blog
+#  automation script every day at 9:00 AM Amsterdam time.
+#
+#  HOW TO SET THIS UP (beginner explanation):
+#  1. Copy this file to YOUR GitHub repository at the exact path:
+#        .github/workflows/auto-blog.yml
+#  2. Add your secret keys in GitHub:
+#        Go to: Settings → Secrets and variables → Actions
+#        Add: ANTHROPIC_API_KEY, PEXELS_API_KEY, GH_TOKEN
+#  3. Done! GitHub will run it every morning automatically.
+# =============================================================
+
+name: 🍷 Cavea Daily Blog Post
+
+on:
+  # ── Automatic: runs every day at 9:00 AM Amsterdam time (7:00 UTC)
+  schedule:
+    - cron: "0 7 * * *"
+
+  # ── Manual: you can also click "Run workflow" in GitHub Actions
+  workflow_dispatch:
+    inputs:
+      topic_id:
+        description: "Specific topic ID to publish (leave empty for next scheduled)"
+        required: false
+        default: ""
+      dry_run:
+        description: "Dry run? (true = generate but do NOT publish)"
+        required: false
+        default: "false"
+
+jobs:
+  generate-and-publish:
+    name: Generate & Publish Blog Post
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Download your repository code
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
+      # Step 2: Install Python
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Step 3: Install the Python libraries we need
+      - name: 📦 Install dependencies
+        run: |
+          pip install anthropic requests
+
+      # Step 4: Create the config.json from GitHub Secrets
+      # (This keeps your API keys safe — never stored in code)
+      - name: 🔐 Create config from secrets
+        run: |
+          cat > cavea_automation/config.json << EOF
+          {
+            "anthropic_api_key": "${{ secrets.ANTHROPIC_API_KEY }}",
+            "pexels_api_key":    "${{ secrets.PEXELS_API_KEY }}",
+            "github_token":      "${{ secrets.GH_TOKEN }}",
+            "github_repo":       "${{ github.repository }}",
+            "site_url":          "https://luukiotje.github.io/cavea-site",
+            "blog_folder":       "blog",
+            "contact_page":      "contact.html"
+          }
+          EOF
+
+      # Step 5: Run the blog automation
+      - name: 🚀 Generate and publish blog post
+        run: |
+          cd cavea_automation
+          ARGS=""
+          if [ "${{ github.event.inputs.topic_id }}" != "" ]; then
+            ARGS="--id ${{ github.event.inputs.topic_id }}"
+          fi
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          python scripts/run_automation.py $ARGS
+
+      # Step 6: Commit the updated topics.json (which tracks what's been published)
+      - name: 💾 Save publication status
+        run: |
+          git config user.name  "Cavea Blog Bot"
+          git config user.email "bot@cavea.nl"
+          git add cavea_automation/topics.json
+          git diff --staged --quiet || git commit -m "📊 Update blog topics status"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
