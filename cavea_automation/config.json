@@ -1,0 +1,10 @@
+{
+  "_comment": "Vul hier jouw eigen API-sleutels in. Deel dit bestand NOOIT publiek!",
+  "anthropic_api_key": "YOUR_ANTHROPIC_API_KEY",
+  "pexels_api_key":    "YOUR_PEXELS_API_KEY",
+  "github_token":      "YOUR_GITHUB_TOKEN",
+  "github_repo":       "Luukiotje/cavea-site",
+  "site_url":          "https://luukiotje.github.io/cavea-site",
+  "blog_folder":       "blog",
+  "contact_page":      "contact.html"
+}
