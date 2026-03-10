@@ -5,84 +5,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog — Cavea | Exclusieve Wijnen & Wijnbelegging</title>
     <meta name="description" content="Lees alles over exclusieve wijnen, wijnbelegging, fiscale voordelen en de mooiste producenten ter wereld. De Cavea blog voor serieuze wijnenthousiastelingen.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Cavea Blog — Kennis & Inspiratie over Exclusieve Wijnen">
+    <meta property="og:description" content="Diepgaande artikelen over wijnbelegging, exclusieve producers en de wereld van fine wine.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=630&q=85&auto=format&fit=crop">
+    <meta property="og:url" content="https://luukiotje.github.io/cavea-site/blog.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Cavea">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cavea Blog — Kennis & Inspiratie">
+    <meta name="twitter:description" content="Diepgaande artikelen over wijnbelegging, exclusieve producers en fine wine.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=630&q=85&auto=format&fit=crop">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Raleway:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#080808;--surface:#0f0f0f;--card:#141414;--elevated:#1a1a1a;--border:#252525;--border-lt:#333;--muted:#888;--body:#ccc;--heading:#f0ece4;--white:#faf8f2;--gold:#c4a24e;--gold-br:#dab756;--gold-dm:#9a7e36;--serif:'Playfair Display',Georgia,serif;--sans:'Raleway','Segoe UI',sans-serif}
+        :root {
+            --bg: #060606;
+            --surface: #0c0c0c;
+            --card: #111111;
+            --elevated: #181818;
+            --border: #1e1e1e;
+            --border-lt: #2a2a2a;
+            --border-gold: rgba(196,162,78,.15);
+            --muted: #777;
+            --body: #b8b8b8;
+            --body-lt: #d4d4d4;
+            --heading: #f0ece4;
+            --white: #faf8f2;
+            --gold: #c4a24e;
+            --gold-br: #dab756;
+            --gold-dm: #9a7e36;
+            --gold-glow: rgba(196,162,78,.08);
+            --wine: #722f37;
+            --serif: 'Playfair Display', Georgia, serif;
+            --sans: 'Raleway', 'Segoe UI', sans-serif;
+            --ease: cubic-bezier(.23,1,.32,1);
+            --max-w: 1200px;
+        }
         html{scroll-behavior:smooth}
-        body{background:var(--bg);color:var(--body);font-family:var(--sans);font-weight:300;font-size:16px;line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+        body{background:var(--bg);color:var(--body);font-family:var(--sans);font-weight:300;font-size:16px;line-height:1.8;overflow-x:hidden;-webkit-font-smoothing:antialiased}
         ::selection{background:var(--gold);color:var(--bg)}
+        img{display:block;max-width:100%}
+        a{text-decoration:none}
 
-        nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:1.8rem 5%;background:rgba(8,8,8,.96);backdrop-filter:blur(24px);box-shadow:0 1px 0 var(--border);transition:padding .5s}
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:1.6rem 5%;background:rgba(6,6,6,.95);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);box-shadow:0 1px 0 var(--border);transition:padding .5s var(--ease)}
         nav.slim{padding:1rem 5%}
-        .logo-link{display:inline-block;text-decoration:none}.logo-img{height:48px;width:auto;display:block;transition:opacity .3s}.logo-img:hover{opacity:.85}
-        .nav-links{display:flex;gap:2.2rem;align-items:center}
-        .nav-links a{color:var(--body);text-decoration:none;font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;transition:color .3s}
-        .nav-links a:hover,.nav-links a.active{color:var(--gold)}
-        .nav-cta{background:var(--gold)!important;color:var(--bg)!important;padding:.65rem 1.8rem!important;font-weight:700!important;letter-spacing:.12em!important}
+        .logo-link{display:inline-block}.logo-img{height:44px;width:auto;display:block;transition:opacity .3s}.logo-img:hover{opacity:.85}
+        .nav-links{display:flex;gap:2.4rem;align-items:center}
+        .nav-links a{color:rgba(255,255,255,.7);font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;transition:color .3s;position:relative}
+        .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transition:transform .3s var(--ease)}
+        .nav-links a:hover{color:var(--white)}.nav-links a:hover::after{transform:scaleX(1)}
+        .nav-links a.active{color:var(--gold)}
+        .nav-links a.active::after{transform:scaleX(1)}
+        .nav-cta{background:var(--gold)!important;color:var(--bg)!important;padding:.6rem 1.8rem!important;font-weight:700!important;letter-spacing:.12em!important}
+        .nav-cta::after{display:none}
         .nav-cta:hover{background:var(--gold-br)!important}
         .mob-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
-        .mob-toggle span{display:block;width:22px;height:1.5px;background:var(--heading)}
+        .mob-toggle span{display:block;width:22px;height:1.5px;background:var(--white);transition:all .3s}
+        .mob-menu-open .mob-toggle span:nth-child(1){transform:rotate(45deg) translateY(6.5px)}
+        .mob-menu-open .mob-toggle span:nth-child(2){opacity:0}
+        .mob-menu-open .mob-toggle span:nth-child(3){transform:rotate(-45deg) translateY(-6.5px)}
 
-        .blog-hero{position:relative;min-height:44vh;display:flex;align-items:flex-end;justify-content:center;text-align:center;overflow:hidden;padding-top:80px}
-        .blog-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.35)}
-        .blog-hero-content{position:relative;z-index:2;padding:4rem 5% 4.5rem;width:100%}
-        .blog-hero-content .s-label{margin-bottom:1rem}
-        .blog-hero-content h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3.5rem);font-weight:400;color:var(--white);line-height:1.2;margin-bottom:1rem}
-        .blog-hero-content p{color:rgba(255,255,255,.7);max-width:540px;margin:0 auto;font-size:.97rem}
-        .s-label{font-size:.62rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:block}
+        /* TYPOGRAPHY */
+        .s-label{font-size:.6rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1rem}
+        .s-title{font-family:var(--serif);font-size:clamp(2rem,3.8vw,3.2rem);font-weight:400;color:var(--heading);line-height:1.2;margin-bottom:1.5rem}
+        .s-title em{font-style:italic;color:var(--gold)}
+        .s-desc{font-size:1.02rem;color:var(--body);max-width:600px;line-height:1.9}
 
-        .blog-listing{max-width:1280px;margin:0 auto;padding:5rem 5%}
+        /* BLOG HERO */
+        .blog-hero{position:relative;min-height:50vh;display:flex;align-items:flex-end;justify-content:center;text-align:center;overflow:hidden;padding-top:80px}
+        .blog-hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=85&auto=format&fit=crop') center/cover no-repeat}
+        .blog-hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,6,6,.3) 0%,rgba(6,6,6,.6) 50%,var(--bg) 100%)}
+        .blog-hero-content{position:relative;z-index:2;padding:4rem 5% 5rem;width:100%}
+        .blog-hero-content h1{font-family:var(--serif);font-size:clamp(2rem,4.5vw,3.5rem);font-weight:400;color:var(--white);line-height:1.15;margin-bottom:1rem}
+        .blog-hero-content p{color:rgba(255,255,255,.6);max-width:560px;margin:0 auto;font-size:.97rem;line-height:1.8}
+
+        /* BLOG LISTING */
+        .blog-listing{max-width:var(--max-w);margin:0 auto;padding:5rem 5%}
         .bl-grid-lg{display:grid;grid-template-columns:repeat(2,1fr);gap:2.5rem}
-        .bl-lg{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all .5s;display:flex;flex-direction:column}
+        .bl-lg{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all .5s var(--ease);display:flex;flex-direction:column}
         .bl-lg:hover{border-color:var(--border-lt);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
         .bl-lg-img-wrap{overflow:hidden}
-        .bl-lg-img{width:100%;height:260px;object-fit:cover;filter:brightness(.8);transition:all .6s;display:block}
-        .bl-lg:hover .bl-lg-img{filter:brightness(1);transform:scale(1.03)}
+        .bl-lg-img{width:100%;height:260px;object-fit:cover;filter:brightness(.75);transition:all .6s var(--ease);display:block}
+        .bl-lg:hover .bl-lg-img{filter:brightness(.9);transform:scale(1.03)}
         .bl-lg-body{padding:2.2rem;flex:1;display:flex;flex-direction:column}
-        .bl-tag{font-size:.58rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;display:block}
-        .bl-lg h2{font-family:var(--serif);font-size:1.35rem;font-weight:500;color:var(--heading);line-height:1.35;margin-bottom:.8rem}
-        .bl-lg p{font-size:.88rem;color:var(--muted);line-height:1.75;flex:1;margin-bottom:1.5rem}
-        .bl-meta{font-size:.75rem;color:var(--muted);display:flex;gap:1.2rem;margin-bottom:1rem}
-        .bl-read{display:inline-flex;align-items:center;gap:.4rem;color:var(--gold);text-decoration:none;font-size:.72rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;transition:gap .3s}
+        .bl-tag{font-size:.56rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;display:block}
+        .bl-lg h2{font-family:var(--serif);font-size:1.3rem;font-weight:500;color:var(--heading);line-height:1.35;margin-bottom:.8rem}
+        .bl-lg p{font-size:.88rem;color:var(--muted);line-height:1.8;flex:1;margin-bottom:1.2rem}
+        .bl-meta{font-size:.72rem;color:var(--muted);display:flex;gap:1.2rem;margin-bottom:.8rem}
+        .bl-read{display:inline-flex;align-items:center;gap:.4rem;color:var(--gold);font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;transition:gap .3s}
         .bl-read:hover{gap:.8rem}
 
-        .signup-s{max-width:none;position:relative;text-align:center;padding:7rem 5%;border-top:1px solid var(--border)}
-        .signup-s::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dm),transparent)}
+        /* SIGNUP */
+        .signup-s{position:relative;text-align:center;padding:8rem 5%;border-top:1px solid var(--border)}
+        .signup-s::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dm),transparent)}
         .su-in{max-width:560px;margin:0 auto}
-        .s-title{font-family:var(--serif);font-size:clamp(1.8rem,3.2vw,2.8rem);font-weight:400;color:var(--heading);line-height:1.25;margin-bottom:1.2rem}
-        .s-title em{font-style:italic;color:var(--gold)}
-        .s-desc{font-size:1rem;color:var(--body);max-width:580px;line-height:1.85}
         .su-form{display:flex;flex-direction:column;gap:.9rem;margin-top:2.5rem}
         .su-row{display:flex;gap:.9rem}
-        .su-inp,.su-sel{flex:1;background:var(--card);border:1px solid var(--border);color:var(--heading);padding:1rem 1.2rem;font-family:var(--sans);font-size:.88rem;font-weight:300;outline:none;transition:border-color .3s}
+        .su-inp,.su-sel{flex:1;background:var(--card);border:1px solid var(--border);color:var(--heading);padding:1rem 1.2rem;font-family:var(--sans);font-size:.88rem;font-weight:300;outline:none;transition:border-color .3s,box-shadow .3s}
         .su-inp::placeholder{color:var(--muted)}
-        .su-inp:focus,.su-sel:focus{border-color:var(--gold-dm);box-shadow:0 0 0 3px rgba(196,162,78,.08)}
+        .su-inp:focus,.su-sel:focus{border-color:var(--gold-dm);box-shadow:0 0 0 3px var(--gold-glow)}
         .su-sel{appearance:none;cursor:pointer;color:var(--muted);background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23777'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1.2rem center}
-        .su-btn{background:var(--gold);color:var(--bg);border:none;padding:1.15rem;font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:all .4s}
-        .su-btn:hover{background:var(--gold-br)}
+        .su-btn{background:var(--gold);color:var(--bg);border:none;padding:1.15rem;font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:all .4s var(--ease)}
+        .su-btn:hover{background:var(--gold-br);transform:translateY(-1px);box-shadow:0 8px 25px rgba(196,162,78,.2)}
         .su-note{font-size:.78rem;color:var(--muted);margin-top:1rem}
         .su-ok{display:none;padding:2.5rem 0}.su-ok.active{display:block}
         .su-ok .chk{width:60px;height:60px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;color:var(--gold);font-size:1.5rem}
         .su-ok h3{font-family:var(--serif);font-size:1.8rem;color:var(--gold);margin-bottom:.7rem}
         .su-err{display:none;margin-top:.8rem;padding:.8rem;background:rgba(180,50,50,.15);border:1px solid rgba(180,50,50,.3);color:#e07070;font-size:.82rem}.su-err.active{display:block}
 
-        footer{background:var(--surface);border-top:1px solid var(--border);padding:4.5rem 5% 2.5rem}
-        .ft-in{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:3rem;max-width:1280px;margin:0 auto}
-        .ft-brand .logo-img{height:40px;margin-bottom:1rem}
-        .ft-brand p{font-size:.85rem;color:var(--muted);line-height:1.75;max-width:300px}
-        .ft-col h4{font-size:.6rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--heading);margin-bottom:1.3rem}
-        .ft-col a{display:block;color:var(--muted);text-decoration:none;font-size:.88rem;margin-bottom:.65rem;transition:color .3s}
+        /* FOOTER */
+        footer{background:var(--surface);border-top:1px solid var(--border);padding:5rem 5% 2.5rem}
+        .ft-in{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:3rem;max-width:var(--max-w);margin:0 auto}
+        .ft-brand .logo-img{height:38px;margin-bottom:1.2rem}
+        .ft-brand p{font-size:.85rem;color:var(--muted);line-height:1.8;max-width:300px}
+        .ft-col h4{font-size:.58rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--heading);margin-bottom:1.3rem}
+        .ft-col a{display:block;color:var(--muted);font-size:.88rem;margin-bottom:.7rem;transition:color .3s}
         .ft-col a:hover{color:var(--gold)}
-        .ft-bot{max-width:1280px;margin:3.5rem auto 0;padding-top:2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
+        .ft-bot{max-width:var(--max-w);margin:3.5rem auto 0;padding-top:2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
 
-        .js-ready .rv{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+        /* ANIMATIONS */
+        .js-ready .rv{opacity:0;transform:translateY(35px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
         .js-ready .rv.vis{opacity:1;transform:translateY(0)}
-        .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}
+        .rv-d1{transition-delay:.1s!important}.rv-d2{transition-delay:.2s!important}.rv-d3{transition-delay:.3s!important}.rv-d4{transition-delay:.4s!important}
 
-        @media(max-width:768px){.nav-links{display:none}.mob-toggle{display:flex}.bl-grid-lg{grid-template-columns:1fr}.su-row{flex-direction:column}.ft-in{grid-template-columns:1fr 1fr}.ft-bot{flex-direction:column;gap:.5rem}}
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .nav-links{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(6,6,6,.98);flex-direction:column;justify-content:center;align-items:center;gap:2rem}
+            .mob-menu-open .nav-links{display:flex}
+            .mob-toggle{display:flex}
+            .bl-grid-lg{grid-template-columns:1fr}
+            .su-row{flex-direction:column}
+            .ft-in{grid-template-columns:1fr 1fr}
+            .ft-bot{flex-direction:column;gap:.5rem}
+        }
         @media(max-width:480px){.ft-in{grid-template-columns:1fr}}
     </style>
 </head>
@@ -90,25 +153,27 @@
 
 <nav id="navbar">
     <a href="index.html" class="logo-link"><img src="logo.svg" alt="Cavea" class="logo-img"></a>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
+        <a href="index.html#about">Over Cavea</a>
         <a href="index.html#pillars">Waarom Cavea</a>
         <a href="index.html#producers">Wijnhuizen</a>
         <a href="index.html#how">Hoe het werkt</a>
         <a href="blog.html" class="active">Blog</a>
         <a href="index.html#signup" class="nav-cta">Lid worden</a>
     </div>
-    <button class="mob-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <button class="mob-toggle" id="mobToggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <!-- HERO -->
 <div class="blog-hero">
-    <img class="blog-hero-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80&auto=format&fit=crop" alt="Cavea blog — wijnkelder">
+    <div class="blog-hero-bg"></div>
     <div class="blog-hero-content">
         <span class="s-label">Kennis & Inspiratie</span>
-        <h1>Verhalen uit de wijnkelder</h1>
+        <h1>Verhalen uit de <em style="font-style:italic;color:var(--gold)">wijnkelder</em></h1>
         <p>Diepgaande artikelen over wijnbelegging, exclusieve producers en de wereld van fine wine — voor de serieuze verzamelaar.</p>
     </div>
 </div>
+
 <!-- ARTICLES -->
 <div class="blog-listing">
     <div class="bl-grid-lg">
@@ -124,7 +189,7 @@
               <div class="bl-meta"><span>10 maart 2026</span><span>8 min leestijd</span></div>
               <h2>Wijn als Belegging: De Fiscale Voordelen en Historisch Rendement</h2>
               <p>Ontdek de fiscale voordelen en historisch rendement van wijn als belegging. Exclusief inzicht voor vermogende investeerders in wijninvesteringen.</p>
-              <span class="bl-read">Lees het artikel →</span>
+              <span class="bl-read">Lees het artikel &#8594;</span>
             </div>
           </div>
         </a>
@@ -139,50 +204,58 @@
               <div class="bl-meta"><span>10 maart 2026</span><span>8 min leestijd</span></div>
               <h2>De Ultieme Startersgids voor Investeren in Wijn</h2>
               <p>Ontdek de basis van wijninvestering. Leer hoe u succesvol kunt investeren in wijn met deze complete startersgids van Cavea.</p>
-              <span class="bl-read">Lees het artikel →</span>
+              <span class="bl-read">Lees het artikel &#8594;</span>
             </div>
           </div>
         </a>
+        <a href="blog/wijninvestering-101.html" style="text-decoration:none;color:inherit;display:block">
         <div class="bl-lg rv rv-d1">
             <div class="bl-lg-img-wrap"><img class="bl-lg-img" src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=700&h=400&q=80&auto=format&fit=crop" alt="Wijninvestering 101" loading="lazy"></div>
             <div class="bl-lg-body">
                 <span class="bl-tag">Investering</span>
                 <div class="bl-meta"><span>3 december 2025</span><span>8 min leestijd</span></div>
                 <h2>Wijninvestering 101: De Complete Startersgids voor Winstgevend Beleggen in Wijn</h2>
-                <p>Welke wijnen stijgen in waarde, waar je op moet letten en hoe je slim begint als wijnbelegger. Van DRC tot Petrus — dit is de gids die u nodig heeft.</p>
-                <a href="blog/wijninvestering-101.html" class="bl-read">Lees het artikel →</a>
+                <p>Welke wijnen stijgen in waarde, waar je op moet letten en hoe je slim begint als wijnbelegger.</p>
+                <span class="bl-read">Lees het artikel &#8594;</span>
             </div>
         </div>
+        </a>
+        <a href="blog/wijn-als-belegging.html" style="text-decoration:none;color:inherit;display:block">
         <div class="bl-lg rv rv-d2">
             <div class="bl-lg-img-wrap"><img class="bl-lg-img" src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=700&h=400&q=80&auto=format&fit=crop" alt="Wijn als belegging" loading="lazy"></div>
             <div class="bl-lg-body">
                 <span class="bl-tag">Fiscaal & Rendement</span>
                 <div class="bl-meta"><span>3 december 2025</span><span>7 min leestijd</span></div>
                 <h2>Wijn als Belegging: De Fiscale Voordelen en Historisch Rendement</h2>
-                <p>Geen vermogenswinstbelasting, 8–12% jaarlijks rendement en automatisch toenemende schaarste. Ontdek waarom wijn de slimste alternatieve belegging is.</p>
-                <a href="blog/wijn-als-belegging.html" class="bl-read">Lees het artikel →</a>
+                <p>Geen vermogenswinstbelasting, 8-12% jaarlijks rendement en automatisch toenemende schaarste.</p>
+                <span class="bl-read">Lees het artikel &#8594;</span>
             </div>
         </div>
+        </a>
+        <a href="blog/exclusieve-wijn-kopen.html" style="text-decoration:none;color:inherit;display:block">
         <div class="bl-lg rv rv-d3">
             <div class="bl-lg-img-wrap"><img class="bl-lg-img" src="https://images.unsplash.com/photo-1528823872057-9c018a7a7553?w=700&h=400&q=80&auto=format&fit=crop" alt="Exclusieve wijn kopen" loading="lazy"></div>
             <div class="bl-lg-body">
                 <span class="bl-tag">Gids</span>
                 <div class="bl-meta"><span>4 december 2025</span><span>6 min leestijd</span></div>
                 <h2>De Beste Adressen om Exclusieve Wijn te Kopen voor uw Collectie</h2>
-                <p>Van directe aankoop bij de producent tot veilingen bij Christie's — wij analyseren de vijf betrouwbaarste kanalen en waarom provenance alles is.</p>
-                <a href="blog/exclusieve-wijn-kopen.html" class="bl-read">Lees het artikel →</a>
+                <p>Van directe aankoop bij de producent tot veilingen — de vijf betrouwbaarste kanalen voor fine wine.</p>
+                <span class="bl-read">Lees het artikel &#8594;</span>
             </div>
         </div>
+        </a>
+        <a href="blog/sassicaia-kopen.html" style="text-decoration:none;color:inherit;display:block">
         <div class="bl-lg rv rv-d4">
             <div class="bl-lg-img-wrap"><img class="bl-lg-img" src="https://images.unsplash.com/photo-1543599723-8f87b7ca70e6?w=700&h=400&q=80&auto=format&fit=crop" alt="Sassicaia Toscane" loading="lazy"></div>
             <div class="bl-lg-body">
                 <span class="bl-tag">Super Tuscan</span>
                 <div class="bl-meta"><span>4 december 2025</span><span>7 min leestijd</span></div>
                 <h2>Sassicaia Kopen: Een Slimme Investering of Pure Passie?</h2>
-                <p>De eerste Super Tuscan met zijn eigen DOC-status. Alles over de beste jaargangen, waardeontwikkeling en waar u authentieke flessen van Tenuta San Guido vindt.</p>
-                <a href="blog/sassicaia-kopen.html" class="bl-read">Lees het artikel →</a>
+                <p>De eerste Super Tuscan met zijn eigen DOC-status. Alles over de beste jaargangen en waardeontwikkeling.</p>
+                <span class="bl-read">Lees het artikel &#8594;</span>
             </div>
         </div>
+        </a>
     </div>
 </div>
 
@@ -190,9 +263,9 @@
 <section class="signup-s">
     <div class="su-in">
         <div class="rv">
-            <span class="s-label" style="margin-bottom:1rem">Exclusieve vroege toegang</span>
-            <h2 class="s-title">Geen artikel missen?<br><em>Schrijf u in voor de nieuwsbrief.</em></h2>
-            <p class="s-desc" style="margin:.8rem auto 0">Ontvang als eerste onze nieuwe artikelen, exclusieve wijn-drops en insider-tips rechtstreeks in uw inbox.</p>
+            <span class="s-label">Exclusieve vroege toegang</span>
+            <h2 class="s-title">Geen artikel missen?<br><em>Schrijf u in.</em></h2>
+            <p class="s-desc" style="margin:0 auto">Ontvang als eerste onze nieuwe artikelen, exclusieve wijndrops en insider-tips rechtstreeks in uw inbox.</p>
         </div>
         <div id="signupForm" class="su-form rv">
             <div class="su-row">
@@ -224,32 +297,72 @@
             <a href="index.html" class="logo-link"><img src="logo.svg" alt="Cavea" class="logo-img"></a>
             <p>Exclusieve toegang tot de zeldzaamste wijnen ter wereld. Direct van de maker, alleen voor leden.</p>
         </div>
-        <div class="ft-col"><h4>Navigatie</h4><a href="index.html#pillars">Waarom Cavea</a><a href="index.html#producers">Wijnhuizen</a><a href="index.html#how">Hoe het werkt</a><a href="blog.html">Blog</a></div>
-        <div class="ft-col"><h4>Juridisch</h4><a href="#">Privacybeleid</a><a href="#">Algemene voorwaarden</a><a href="#">Cookie-instellingen</a></div>
-        <div class="ft-col"><h4>Contact</h4><a href="mailto:info@cavea.wine">info@cavea.wine</a><a href="#">Instagram</a></div>
+        <div class="ft-col">
+            <h4>Navigatie</h4>
+            <a href="index.html#about">Over Cavea</a>
+            <a href="index.html#pillars">Waarom Cavea</a>
+            <a href="index.html#producers">Wijnhuizen</a>
+            <a href="index.html#how">Hoe het werkt</a>
+            <a href="blog.html">Blog</a>
+        </div>
+        <div class="ft-col">
+            <h4>Juridisch</h4>
+            <a href="#">Privacybeleid</a>
+            <a href="#">Algemene voorwaarden</a>
+            <a href="#">Cookie-instellingen</a>
+        </div>
+        <div class="ft-col">
+            <h4>Contact</h4>
+            <a href="mailto:luuk@biodivino.nl">luuk@biodivino.nl</a>
+            <a href="#">Instagram</a>
+        </div>
     </div>
-    <div class="ft-bot"><span>&copy; 2025 Cavea. Alle rechten voorbehouden.</span><span>Drinken met mate. 18+</span></div>
+    <div class="ft-bot">
+        <span>&copy; 2025 Cavea. Alle rechten voorbehouden.</span>
+        <span>Drinken met mate. 18+</span>
+    </div>
 </footer>
 
 <script>
+/* Nav */
 document.body.classList.add('js-ready');
 const nav=document.getElementById('navbar');
 window.addEventListener('scroll',()=>nav.classList.toggle('slim',window.scrollY>60));
-const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');ro.unobserve(en.target)}})},{threshold:0.05});
+
+/* Mobile menu */
+const mobToggle=document.getElementById('mobToggle');
+mobToggle.addEventListener('click',()=>document.body.classList.toggle('mob-menu-open'));
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('mob-menu-open')));
+
+/* Scroll reveal */
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');ro.unobserve(en.target)}})},{threshold:0.05,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
-setTimeout(()=>{document.querySelectorAll('.rv').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight)el.classList.add('vis')})},50);
+setTimeout(()=>{document.querySelectorAll('.rv').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0)el.classList.add('vis')})},80);
+
+/* Signup — connected to Google Sheets */
+const SIGNUP_ENDPOINT='https://script.google.com/macros/s/AKfycbxKp1SgWGshd6yzxdEo0uT2cylK5UDOxE4O6tUp0_ERnhls_nbjKEMjRijXdLCH8n0xdA/exec';
+
 function handleSignup(){
     const f=document.getElementById('fname').value.trim();
     const l=document.getElementById('lname').value.trim();
     const e=document.getElementById('email').value.trim();
     const p=document.getElementById('profile').value;
     const err=document.getElementById('signupError');
-    err.classList.remove('active');
+    const btn=document.querySelector('.su-btn');
+    err.classList.remove('active');err.textContent='';
     if(!f||!l){err.textContent='Vul alstublieft uw voor- en achternaam in.';err.classList.add('active');return}
-    if(!e||!e.includes('@')){err.textContent='Vul alstublieft een geldig e-mailadres in.';err.classList.add('active');return}
+    if(!e||!e.includes('@')||!e.includes('.')){err.textContent='Vul alstublieft een geldig e-mailadres in.';err.classList.add('active');return}
     if(!p){err.textContent='Selecteer alstublieft uw profiel.';err.classList.add('active');return}
-    document.getElementById('signupForm').style.display='none';
-    const s=document.getElementById('signupSuccess');s.classList.add('active');
+    btn.textContent='Even geduld...';btn.disabled=true;
+    fetch(SIGNUP_ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({fname:f,lname:l,email:e,profile:p})})
+    .then(()=>{
+        document.getElementById('signupForm').style.display='none';
+        const s=document.getElementById('signupSuccess');s.classList.add('active');s.style.display='block';
+    })
+    .catch(()=>{
+        err.textContent='Er ging iets mis. Probeer het opnieuw.';err.classList.add('active');
+        btn.textContent='Inschrijven voor de nieuwsbrief';btn.disabled=false;
+    });
 }
 </script>
 </body>
