@@ -115,6 +115,65 @@ def update_blog_index(topic, image_url, meta_description, publish_date):
     )
 
 
+def get_current_index():
+    """Fetches the current index.html from GitHub."""
+    resp = requests.get(f"{API_BASE}/contents/index.html", headers=HEADERS)
+    if resp.status_code == 200:
+        return base64.b64decode(resp.json()["content"]).decode("utf-8")
+    return None
+
+
+def build_index_blog_card(topic, image_url, meta_description):
+    """Builds a card matching the bl-c style used on the index.html homepage."""
+    return f"""<div class="bl-c rv rv-d1">
+                <a href="{BLOG_FOLDER}/{topic['slug']}.html" style="text-decoration:none;display:contents">
+                <div class="bl-img-wrap"><img class="bl-c-img" src="{image_url}" alt="{topic['title_1']}" loading="lazy"></div>
+                <div class="bl-body"><p class="bl-tag">Investering</p><h3>{topic['title_1']}</h3><p>{meta_description}</p><span style="color:var(--gold);font-size:.72rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase">Lees meer →</span></div>
+                </a>
+            </div>"""
+
+
+def update_index_blog_section(topic, image_url, meta_description):
+    """
+    Updates the blog section on index.html:
+    - Adds the new post card at the top
+    - Keeps only 3 cards total (removes the oldest)
+    """
+    current_html = get_current_index()
+    if not current_html:
+        print("  Kan index.html niet ophalen. Homepage niet bijgewerkt.")
+        return False
+
+    # Find the bl-grid div and insert the new card at position 1 (after opening)
+    import re
+    grid_pattern = r'(<div class="bl-grid">)(.*?)(</div>\s*<div style="text-align:center)'
+    match = re.search(grid_pattern, current_html, re.DOTALL)
+    if not match:
+        print("  Blog grid niet gevonden in index.html. Homepage niet bijgewerkt.")
+        return False
+
+    grid_open = match.group(1)
+    grid_content = match.group(2)
+    grid_after = match.group(3)
+
+    # Parse existing cards
+    card_pattern = r'<div class="bl-c rv[^"]*">.*?</div>\s*</a>\s*</div>'
+    existing_cards = re.findall(card_pattern, grid_content, re.DOTALL)
+
+    # Build new card list: new card first, then keep up to 2 old ones (3 total)
+    new_card = build_index_blog_card(topic, image_url, meta_description)
+    cards_to_keep = [new_card] + existing_cards[:2]
+
+    new_grid_content = "\n            ".join(cards_to_keep)
+    updated_html = current_html[:match.start()] + grid_open + "\n            " + new_grid_content + "\n        " + grid_after + current_html[match.end():]
+
+    return push_file(
+        "index.html",
+        updated_html,
+        f"Homepage blog bijgewerkt: '{topic['title_1']}'"
+    )
+
+
 def publish_post(topic, html_content, image_url, meta_description):
     publish_date = datetime.date.today().isoformat()
     file_path    = f"{BLOG_FOLDER}/{topic['slug']}.html"
@@ -125,6 +184,7 @@ def publish_post(topic, html_content, image_url, meta_description):
 
     if success:
         update_blog_index(topic, image_url, meta_description, publish_date)
+        update_index_blog_section(topic, image_url, meta_description)
         live_url = f"{SITE_URL}/{file_path}"
         print(f"\nLive op: {live_url}")
         return live_url
