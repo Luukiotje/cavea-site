@@ -90,7 +90,7 @@ jobs:
           git config user.email "bot@cavea.nl"
           git add cavea_automation/topics.json
           git diff --staged --quiet || git commit -m "📊 Update blog topics status"
-          git pull --rebase origin main
+          git pull --rebase --autostash origin main
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
