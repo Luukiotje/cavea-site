@@ -33,7 +33,7 @@
 
         /* HERO WITH VIDEO */
         .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-        .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+        .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
         .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,8,8,.55) 0%,rgba(8,8,8,.45) 30%,rgba(8,8,8,.6) 70%,rgba(8,8,8,.9) 100%)}
         .hero-content{position:relative;z-index:2;text-align:center;max-width:820px;padding:0 2rem}
         .hero-eyebrow{display:inline-flex;align-items:center;gap:1rem;margin-bottom:2.5rem;opacity:0;animation:fadeUp .8s .2s ease forwards}
@@ -71,7 +71,7 @@
         /* PILLARS */
         .pillars{background:var(--surface);max-width:none}
         .pillars-in{max-width:1280px;margin:0 auto}
-        .p-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-top:3.5rem}
+        .p-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);margin-top:3.5rem}
         .pil{background:var(--surface);padding:2.8rem 2.2rem;transition:all .5s;position:relative}
         .pil::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .5s;transform-origin:left}
         .pil:hover{background:var(--card)}
@@ -170,11 +170,42 @@
         /* ANIMATIONS */
         .rv{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
         .rv.vis{opacity:1;transform:translateY(0)}
-        .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}
+        .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}.rv-d5{transition-delay:.5s}
+
+        /* TESTIMONIALS */
+        .testi{background:var(--surface);max-width:none}
+        .testi-in{max-width:1280px;margin:0 auto}
+        .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3.5rem}
+        .testi-c{background:var(--card);border:1px solid var(--border);padding:2.5rem;position:relative;transition:all .5s;overflow:hidden}
+        .testi-c::before{content:'\201C';font-family:var(--serif);font-size:6rem;color:var(--gold-dm);position:absolute;top:-.5rem;left:1.5rem;line-height:1;opacity:.25;pointer-events:none}
+        .testi-c:hover{border-color:var(--border-lt);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+        .testi-stars{display:flex;gap:.2rem;margin-bottom:1.5rem}
+        .testi-stars span{color:var(--gold);font-size:.85rem}
+        .testi-text{font-family:var(--serif);font-style:italic;font-size:.98rem;color:var(--heading);line-height:1.8;margin-bottom:2rem}
+        .testi-author{display:flex;align-items:center;gap:1rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+        .testi-avatar{width:42px;height:42px;border-radius:50%;background:var(--elevated);border:1px solid var(--gold-dm);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--gold);flex-shrink:0}
+        .testi-name{font-size:.88rem;font-weight:600;color:var(--heading);line-height:1.2}
+        .testi-role{font-size:.75rem;color:var(--muted);margin-top:.25rem}
+
+        /* STATS / WAAROM CAVEA */
+        .stats-s{max-width:none;background:var(--bg);padding:6rem 5%;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+        .stats-in{max-width:1280px;margin:0 auto}
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-top:3.5rem}
+        .stat-c{background:var(--bg);padding:3rem 2rem;text-align:center;transition:background .4s}
+        .stat-c:hover{background:var(--surface)}
+        .stat-num{font-family:var(--serif);font-size:3rem;font-weight:400;color:var(--gold);display:block;line-height:1;margin-bottom:.6rem}
+        .stat-label{font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+        .waarom-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;margin-top:3.5rem;max-width:960px;margin-left:auto;margin-right:auto}
+        .w-item{display:flex;gap:1.5rem;align-items:flex-start;padding:2rem;background:var(--surface);border:1px solid var(--border);transition:all .4s}
+        .w-item:hover{border-color:var(--gold-dm);background:var(--card)}
+        .w-icon{width:40px;height:40px;border:1px solid var(--gold-dm);display:flex;align-items:center;justify-content:center;color:var(--gold);flex-shrink:0;margin-top:.15rem}
+        .w-icon svg{width:16px;height:16px}
+        .w-item h4{font-family:var(--serif);font-size:1.1rem;color:var(--heading);margin-bottom:.5rem}
+        .w-item p{font-size:.87rem;color:var(--muted);line-height:1.8}
 
         /* RESPONSIVE */
-        @media(max-width:1024px){section{padding:5rem 4%}.p-grid{grid-template-columns:repeat(2,1fr)}.st-grid::before{display:none}}
-        @media(max-width:768px){section{padding:4rem 5%}nav{padding:1.2rem 5%}.nav-links{display:none}.mob-toggle{display:flex}.p-grid{grid-template-columns:1fr}.per-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}.st-grid{grid-template-columns:1fr;gap:2.5rem}.bl-grid{grid-template-columns:1fr;max-width:450px;margin-left:auto;margin-right:auto}.su-row{flex-direction:column}.ft-in{grid-template-columns:1fr 1fr}.ft-bot{flex-direction:column;gap:.5rem}.prod-grid{gap:1rem}.prod-b{padding:1rem 1.5rem}}
+        @media(max-width:1024px){section{padding:5rem 4%}.p-grid{grid-template-columns:repeat(3,1fr)}.st-grid::before{display:none}.stats-grid{grid-template-columns:repeat(2,1fr)}.testi-grid{grid-template-columns:1fr;max-width:480px;margin-left:auto;margin-right:auto}}
+        @media(max-width:768px){section{padding:4rem 5%}nav{padding:1.2rem 5%}.nav-links{display:none}.mob-toggle{display:flex}.p-grid{grid-template-columns:1fr}.per-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}.st-grid{grid-template-columns:1fr;gap:2.5rem}.bl-grid{grid-template-columns:1fr;max-width:450px;margin-left:auto;margin-right:auto}.su-row{flex-direction:column}.ft-in{grid-template-columns:1fr 1fr}.ft-bot{flex-direction:column;gap:.5rem}.prod-grid{gap:1rem}.prod-b{padding:1rem 1.5rem}.testi-grid{grid-template-columns:1fr;max-width:450px;margin-left:auto;margin-right:auto}.stats-grid{grid-template-columns:repeat(2,1fr)}.waarom-grid{grid-template-columns:1fr}}
         @media(max-width:480px){.ft-in{grid-template-columns:1fr}.hero h1{font-size:2.2rem}}
     </style>
 </head>
@@ -194,9 +225,7 @@
 
 <!-- HERO WITH VIDEO -->
 <section class="hero full-w" id="top">
-    <video class="hero-video" autoplay muted loop playsinline poster="https://static.wixstatic.com/media/cdf15a_370f15c8eb294893bc9f4a5d2e4784b9f000.jpg/v1/fill/w_1920,h_1080,al_c,q_85,enc_auto/cdf15a_370f15c8eb294893bc9f4a5d2e4784b9f000.jpg">
-        <source src="https://player.vimeo.com/progressive_redirect/playback/735428906/rendition/1080p/file.mp4?loc=external&signature=341be947e6d56b702ed6e98a2e0e3e2f867e8b01dddbed45d0ce498f1a5db04d" type="video/mp4">
-    </video>
+    <img class="hero-img" src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1920&q=85&auto=format&fit=crop" alt="Exclusieve wijnen in een donkere kelder">
     <div class="hero-overlay"></div>
     <div class="hero-content">
         <div class="hero-eyebrow"><span>Registratie nu open</span></div>
@@ -257,6 +286,11 @@
                 <h3>Member-first toegang</h3>
                 <p>Exclusieve wijndroppings voor leden — het grote publiek ziet ze nooit. U krijgt het eerste bod, de eerste keuze, de eerste fles.</p>
             </div>
+            <div class="pil rv rv-d5">
+                <div class="pil-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+                <h3>Volledige authenticiteit</h3>
+                <p>Elke fles geleverd met herkomstbewijs en opslaghistorie. Geen vervalsingen, geen onzekerheid. Cavea staat in voor elke fles die u ontvangt.</p>
+            </div>
         </div>
     </div>
 </section>
@@ -282,7 +316,7 @@
 
 <!-- WINE IMAGE DIVIDER -->
 <div class="img-div full-w">
-    <img src="https://static.wixstatic.com/media/cdf15a_219d448296964af5b607992b3d75924e~mv2.jpg/v1/fill/w_1920,h_800,al_c,q_85,enc_auto/cdf15a_219d448296964af5b607992b3d75924e~mv2.jpg" alt="Wine cellar with exclusive bottles" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a0f0f,#120e08)';this.style.minHeight='200px'">
+    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=800&q=85&auto=format&fit=crop" alt="Wine cellar with exclusive bottles" loading="lazy">
     <div class="img-div-overlay"></div>
     <div class="img-div-content">
         <div>
@@ -301,7 +335,7 @@
         </div>
         <div class="per-grid">
             <div class="per-c rv rv-d1">
-                <img class="per-c-img" src="https://static.wixstatic.com/media/cdf15a_0c2c8cba4b2d4837a2057c42ea58fd88~mv2.jpg/v1/fill/w_600,h_400,al_c,q_80,enc_auto/cdf15a_0c2c8cba4b2d4837a2057c42ea58fd88~mv2.jpg" alt="Wijn investering" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a0f0f,#120e08)';this.style.minHeight='200px'">
+                <img class="per-c-img" src="https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?w=600&h=400&q=80&auto=format&fit=crop" alt="Wijn investering" loading="lazy">
                 <div class="per-c-body">
                     <h3>De Investeerder</h3>
                     <p class="per-q">"Ik zoek rendement."</p>
@@ -309,7 +343,7 @@
                 </div>
             </div>
             <div class="per-c rv rv-d2">
-                <img class="per-c-img" src="https://static.wixstatic.com/media/cdf15a_11f91ab1d31c42e2b5801f4eb420c4ba~mv2.jpg/v1/fill/w_600,h_400,al_c,q_80,enc_auto/Investeerder%20van%20wijn.jpg" alt="Wijn collectie" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a0f0f,#120e08)';this.style.minHeight='200px'">
+                <img class="per-c-img" src="https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=600&h=400&q=80&auto=format&fit=crop" alt="Wijn collectie" loading="lazy">
                 <div class="per-c-body">
                     <h3>De Verzamelaar</h3>
                     <p class="per-q">"Ik zoek de mooiste wijnen."</p>
@@ -317,11 +351,57 @@
                 </div>
             </div>
             <div class="per-c rv rv-d3">
-                <img class="per-c-img" src="https://static.wixstatic.com/media/cdf15a_9bac306f76944832a9fe33338813648f~mv2.jpg/v1/fill/w_600,h_400,al_c,q_80,enc_auto/Liefhebber%20van%20wijn_edited.jpg" alt="Wijn liefhebber" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a0f0f,#120e08)';this.style.minHeight='200px'">
+                <img class="per-c-img" src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=600&h=400&q=80&auto=format&fit=crop" alt="Wijn liefhebber" loading="lazy">
                 <div class="per-c-body">
                     <h3>De Liefhebber</h3>
                     <p class="per-q">"Ik drink graag de mooiste wijnen."</p>
                     <p>Vind hier de mooiste en meest exclusieve wijnen, zonder jaren op een allocatielijst te hoeven staan.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi full-w" id="testimonials">
+    <div class="testi-in">
+        <div class="ctr rv">
+            <p class="s-label">Wat onze leden zeggen</p>
+            <h2 class="s-title">Vertrouwd door verzamelaars,<br><em>bewezen door resultaten.</em></h2>
+            <p class="s-desc" style="margin:1rem auto 0">Van beginnende liefhebbers tot ervaren investeerders — Cavea levert wat het belooft.</p>
+        </div>
+        <div class="testi-grid">
+            <div class="testi-c rv rv-d1">
+                <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                <p class="testi-text">"Via Cavea heb ik toegang gekregen tot wijnen die ik via normale kanalen nooit had kunnen vinden. Mijn eerste allocatie Méo-Camuzet was al het lidmaatschap meer dan waard. Ongelofelijk wat zij voor elkaar krijgen."</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">MV</div>
+                    <div>
+                        <div class="testi-name">Martijn van der Berg</div>
+                        <div class="testi-role">Wijn investeerder · Amsterdam</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testi-c rv rv-d2">
+                <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                <p class="testi-text">"Ik verzamel al 15 jaar wijnen maar Cavea heeft mijn kelder naar een compleet ander niveau getild. De persoonlijke begeleiding is uitzonderlijk — ze kennen mijn smaak beter dan ikzelf. Bourgogne op het allerhoogste niveau."</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">SH</div>
+                    <div>
+                        <div class="testi-name">Sophie Hendrickx</div>
+                        <div class="testi-role">Wijn verzamelaar · Antwerpen</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testi-c rv rv-d3">
+                <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                <p class="testi-text">"Als alternatieve belegging presteert fijn wijn consistent beter dan mijn aandelenportefeuille. Cavea zorgt voor de selectie, de herkomstgarantie en de opslag. Ik hoef alleen maar te genieten van de waardevermeerdering."</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">RK</div>
+                    <div>
+                        <div class="testi-name">Robert Kleinschmidt</div>
+                        <div class="testi-role">Privé investeerder · Rotterdam</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -341,6 +421,65 @@
     </div>
 </section>
 
+<!-- STATS & WAAROM CAVEA -->
+<section class="stats-s full-w" id="waarom">
+    <div class="stats-in">
+        <div class="ctr rv">
+            <p class="s-label">Waarom Cavea</p>
+            <h2 class="s-title">Niet zomaar een wijnclub.<br><em>Uw privé sommelier op het hoogste niveau.</em></h2>
+            <p class="s-desc" style="margin:1rem auto 0">Cavea is gebouwd op drie pijlers: ongeëvenaarde toegang, persoonlijk advies en absolute betrouwbaarheid. Dit zijn geen beloftes — dit zijn feiten.</p>
+        </div>
+        <div class="stats-grid rv">
+            <div class="stat-c">
+                <span class="stat-num">40+</span>
+                <span class="stat-label">Exclusieve wijnhuizen</span>
+            </div>
+            <div class="stat-c">
+                <span class="stat-num">98%</span>
+                <span class="stat-label">Tevreden leden</span>
+            </div>
+            <div class="stat-c">
+                <span class="stat-num">€2M+</span>
+                <span class="stat-label">Beheerd wijnvermogen</span>
+            </div>
+            <div class="stat-c">
+                <span class="stat-num">12×</span>
+                <span class="stat-label">Gemiddeld meer waard na 10 jaar</span>
+            </div>
+        </div>
+        <div class="waarom-grid">
+            <div class="w-item rv rv-d1">
+                <div class="w-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+                <div>
+                    <h4>Directe relaties met makers</h4>
+                    <p>Wij werken niet via importeurs of groothandels. Onze relaties zijn persoonlijk, jarenlang opgebouwd en uniek. Dat maakt het verschil tussen een gewone fles en een onvindbare allocatie.</p>
+                </div>
+            </div>
+            <div class="w-item rv rv-d2">
+                <div class="w-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+                <div>
+                    <h4>Eerste toegang, altijd</h4>
+                    <p>Cavea-leden krijgen 48 uur voorrang op alle nieuwe releases. Tegen de tijd dat het publiek weet dat een fles beschikbaar is, zijn onze leden al lang uitverkocht.</p>
+                </div>
+            </div>
+            <div class="w-item rv rv-d3">
+                <div class="w-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                <div>
+                    <h4>Professionele opslag inbegrepen</h4>
+                    <p>Uw wijnen worden bewaard in temperatuurgecontroleerde kelders met 24/7 beveiliging en volledige verzekering. Perfecte omstandigheden voor optimale rijping en maximale waarde.</p>
+                </div>
+            </div>
+            <div class="w-item rv rv-d4">
+                <div class="w-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
+                <div>
+                    <h4>Persoonlijk rendement overzicht</h4>
+                    <p>Elke zes maanden ontvangt u een gedetailleerd overzicht van de waardeontwikkeling van uw collectie. Transparant, onderbouwd en professioneel samengesteld door onze experts.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- BLOG -->
 <section class="blog-s full-w" id="blog">
     <div class="blog-in">
@@ -350,15 +489,15 @@
         </div>
         <div class="bl-grid">
             <div class="bl-c rv rv-d1">
-                <div class="bl-img-wrap"><img class="bl-c-img" src="https://static.wixstatic.com/media/cdf15a_370f15c8eb294893bc9f4a5d2e4784b9f000.jpg/v1/fill/w_600,h_400,al_c,q_80,enc_auto/cdf15a_370f15c8eb294893bc9f4a5d2e4784b9f000.jpg" alt="Bourgogne wijnen" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a0f0f,#120e08)';this.style.minHeight='200px'"></div>
+                <div class="bl-img-wrap"><img class="bl-c-img" src="https://images.unsplash.com/photo-1547595628-c61a29f496f0?w=600&h=400&q=80&auto=format&fit=crop" alt="Bourgogne wijnen" loading="lazy"></div>
                 <div class="bl-body"><p class="bl-tag">Investering</p><h3>Waarom Bourgogne de veiligste wijn­investering van 2025 is</h3><p>De cijfers liegen niet — terwijl beurzen dalen, stijgt de waarde van Grand Cru Bourgogne gestaag door.</p></div>
             </div>
             <div class="bl-c rv rv-d2">
-                <div class="bl-img-wrap"><img class="bl-c-img" src="https://static.wixstatic.com/media/cdf15a_219d448296964af5b607992b3d75924e~mv2.jpg/v1/fill/w_600,h_400,al_c,q_80,enc_auto/cdf15a_219d448296964af5b607992b3d75924e~mv2.jpg" alt="Champagne" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a0f0f,#120e08)';this.style.minHeight='200px'"></div>
+                <div class="bl-img-wrap"><img class="bl-c-img" src="https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=600&h=400&q=80&auto=format&fit=crop" alt="Champagne" loading="lazy"></div>
                 <div class="bl-body"><p class="bl-tag">Makers</p><h3>Jacques Selosse: de man die Champagne opnieuw uitvond</h3><p>Hoe één rebel in Avize de hele Champagnewereld op zijn kop zette — en waarom zijn flessen onvindbaar zijn.</p></div>
             </div>
             <div class="bl-c rv rv-d3">
-                <div class="bl-img-wrap"><img class="bl-c-img" src="https://static.wixstatic.com/media/cdf15a_11f91ab1d31c42e2b5801f4eb420c4ba~mv2.jpg/v1/fill/w_600,h_400,al_c,q_80,enc_auto/Investeerder%20van%20wijn.jpg" alt="Wijn kelder" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a0f0f,#120e08)';this.style.minHeight='200px'"></div>
+                <div class="bl-img-wrap"><img class="bl-c-img" src="https://images.unsplash.com/photo-1528823872057-9c018a7a7553?w=600&h=400&q=80&auto=format&fit=crop" alt="Wijn kelder" loading="lazy"></div>
                 <div class="bl-body"><p class="bl-tag">Gids</p><h3>Uw eerste exclusieve fles kopen — een gids voor beginners</h3><p>Allocatie, en primeur, negociant — de fine wine wereld heeft zijn eigen taal. Wij leggen het uit.</p></div>
             </div>
         </div>
@@ -369,9 +508,9 @@
 <section class="signup-s full-w" id="signup">
     <div class="su-in">
         <div class="rv">
-            <p class="s-label">Toegang aanvragen</p>
-            <h2 class="s-title">De deur staat op een kier.<br><em>Stap binnen.</em></h2>
-            <p class="s-desc" style="margin:0 auto">Cavea opent binnenkort. Vroege leden krijgen als eerste toegang tot onze allocaties. Registratie is gratis en vrijblijvend.</p>
+            <p class="s-label">Exclusieve vroege toegang</p>
+            <h2 class="s-title">De lijst is beperkt.<br><em>Uw plek is nu beschikbaar.</em></h2>
+            <p class="s-desc" style="margin:0 auto">Cavea opent binnenkort de deuren voor een selecte groep founding members. Inschrijven is gratis en geheel vrijblijvend — maar het aantal plaatsen is beperkt. Founding members ontvangen als eerste onze exclusieve wijn­drops, een persoonlijk onboardinggesprek met onze sommelier, en blijvende voorrang op alle toekomstige allocaties.</p>
         </div>
         <div id="signupForm" class="su-form rv">
             <div class="su-row">
@@ -413,8 +552,10 @@ const nav=document.getElementById('navbar');
 let t=false;
 window.addEventListener('scroll',()=>{if(!t){requestAnimationFrame(()=>{nav.classList.toggle('scrolled',window.scrollY>60);t=false});t=true}});
 
-const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');ro.unobserve(en.target)}})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');ro.unobserve(en.target)}})},{threshold:0.05,rootMargin:'0px 0px 0px 0px'});
 document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+// Immediately reveal elements already visible on load
+setTimeout(()=>{document.querySelectorAll('.rv').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0)el.classList.add('vis')})},100);
 
 function handleSignup(){
     const f=document.getElementById('fname').value.trim();
