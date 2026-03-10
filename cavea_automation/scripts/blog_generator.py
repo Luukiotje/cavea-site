@@ -1,22 +1,7 @@
 """
-=============================================================
-  CAVEA BLOG AUTOMATION — BLOG GENERATOR
-  Generates SEO-optimized HTML blog posts using Claude AI,
-  fetches a relevant image, and saves the post ready to publish.
-=============================================================
-
-HOW IT WORKS (beginner explanation):
-  1. This script reads the list of blog topics from topics.json
-  2. It picks the next topic that hasn't been published yet
-  3. It calls the Claude AI API to write a full SEO blog post in Dutch
-  4. It fetches a beautiful wine photo from Pexels (free)
-  5. It wraps everything in a professional HTML file
-  6. It saves the HTML file and marks the topic as 'done'
-
-SETUP:
-  1. pip install anthropic requests
-  2. Set your API keys in config.json (see README)
-  3. Run: python scripts/blog_generator.py
+CAVEA BLOG AUTOMATION — BLOG GENERATOR (v2 — matches dark theme)
+Generates SEO-optimized HTML blog posts using Claude AI,
+fetches a wine photo, and outputs HTML matching cavea-site's exact style.
 """
 
 import json
@@ -26,8 +11,7 @@ import datetime
 import requests
 import anthropic
 
-# ─── Load config ───────────────────────────────────────────
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 TOPICS_PATH = os.path.join(BASE_DIR, "topics.json")
 POSTS_DIR   = os.path.join(BASE_DIR, "posts")
@@ -38,12 +22,10 @@ with open(CONFIG_PATH) as f:
 
 ANTHROPIC_API_KEY = config["anthropic_api_key"]
 PEXELS_API_KEY    = config["pexels_api_key"]
-SITE_URL          = config["site_url"]          # e.g. "https://cavea.nl"
-BLOG_FOLDER       = config["blog_folder"]       # e.g. "blog"
-CONTACT_PAGE      = config.get("contact_page", "contact.html")
+SITE_URL          = config["site_url"]
+BLOG_FOLDER       = config["blog_folder"]
 
 
-# ─── Helper: pick the next pending topic ──────────────────
 def get_next_topic():
     with open(TOPICS_PATH) as f:
         topics = json.load(f)
@@ -62,19 +44,12 @@ def mark_topic_published(topics, topic_id):
         json.dump(topics, f, ensure_ascii=False, indent=2)
 
 
-# ─── Helper: fetch a wine image from Pexels ──────────────
 def fetch_wine_image(query="fine wine cellar bordeaux"):
-    """
-    Pexels is a free stock photo site. We use their API to get
-    a relevant, professional wine photo for each blog post.
-    """
     if not PEXELS_API_KEY or PEXELS_API_KEY == "YOUR_PEXELS_API_KEY":
-        # Fallback image if no API key is set
         return {
-            "url": "https://images.pexels.com/photos/1407846/pexels-photo-1407846.jpeg?auto=compress&cs=tinysrgb&w=1200",
+            "url": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1400&q=85&auto=format&fit=crop",
             "alt": "Exclusieve wijnflessen in een kelder"
         }
-
     headers = {"Authorization": PEXELS_API_KEY}
     params  = {"query": query, "per_page": 1, "orientation": "landscape"}
     try:
@@ -82,75 +57,63 @@ def fetch_wine_image(query="fine wine cellar bordeaux"):
         data = resp.json()
         if data.get("photos"):
             photo = data["photos"][0]
-            return {
-                "url": photo["src"]["large2x"],
-                "alt": photo.get("alt", query)
-            }
+            return {"url": photo["src"]["large2x"], "alt": photo.get("alt", query)}
     except Exception as e:
-        print(f"  ⚠️  Pexels fout: {e} — gebruik standaardafbeelding")
-
+        print(f"  Pexels fout: {e} — gebruik standaardafbeelding")
     return {
-        "url": "https://images.pexels.com/photos/1407846/pexels-photo-1407846.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "url": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1400&q=85&auto=format&fit=crop",
         "alt": "Exclusieve wijnflessen in een kelder"
     }
 
 
-# ─── Helper: generate blog content via Claude API ────────
 def generate_blog_content(topic):
-    """
-    This function sends a prompt to Claude (the AI) and asks it
-    to write a full, SEO-optimized Dutch blog post.
-    Think of it as hiring a professional writer who works instantly.
-    """
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
     prompt = f"""Schrijf een volledig SEO-geoptimaliseerd blogartikel in het Nederlands voor Cavea,
-een premium wijninvesteringsbedrijf.
+een premium wijninvesteringsbedrijf met een donker, luxueus design.
 
 ONDERWERP: {topic['short_tail']}
 FOCUSTITEL: {topic['title_1']}
 KEYWORD FOCUS: {topic['keyword_focus_1']}
-SLUG: {topic['slug']}
 
-VEREISTEN:
-- Taal: Nederlands, professioneel maar toegankelijk
-- Lengte: 900–1200 woorden
-- Toon: Deskundig, betrouwbaar, licht enthousiast over wijn
-- Doelgroep: Nederlanders die interesse hebben in wijn als belegging (beginners tot gevorderden)
+TOON & STIJL:
+- Professioneel, luxueus en deskundig — zoals een exclusief wijnmagazijn
+- Gebruik "u" (formeel) als aanspreking, niet "je/jij"
+- Schrijf voor vermogende investeerders en wijnliefhebbers
+- Lengte: 800–1100 woorden
 
-SEO-VEREISTEN:
-- Gebruik het hoofdkeyword "{topic['short_tail']}" in de eerste 100 woorden
-- Gebruik variaties zoals "wijninvestering", "wijn als belegging", "beleggen in wijn"
-- Schrijf een pakkende meta description van max 155 tekens (geef dit apart aan)
-- Gebruik H2- en H3-koppen die keywords bevatten
+SEO:
+- Gebruik het keyword "{topic['short_tail']}" in de eerste 100 woorden
+- Gebruik variaties: "wijninvestering", "wijn als belegging", "beleggen in wijn"
+- Meta description: max 155 tekens (geef dit apart aan)
 
-STRUCTUUR (verplicht):
-1. Pakkende inleiding (150–200 woorden) — zet de lezer direct aan het denken
-2. Minimaal 3 H2-secties met inhoud
-3. Een praktisch voorbeeld of vergelijking (tabel of lijst mag)
-4. Een highlight-box met een tip of waarschuwing (begin de sectie met [HIGHLIGHT_BOX] en eindig met [/HIGHLIGHT_BOX])
-5. Een call-to-action sectie richting Cavea (begin met [CTA] en eindig met [/CTA])
-6. Sterke conclusie
+STRUCTUUR (gebruik EXACT deze HTML-klassen):
+1. Introductie als eerste <p> — pakkend, direct, geen <h2>
+2. Minimaal 3 secties met <h2>-koppen
+3. Gebruik <h3> voor subsecties
+4. Gebruik <ul> of <ol> voor lijsten
+5. Gebruik precies 1-2 pull-quotes met klasse "pull-quote":
+   <div class="pull-quote"><p>"quote tekst hier"</p></div>
+6. Gebruik <strong> voor nadruk
+7. GEEN tabellen
+8. GEEN <div class="highlight-box"> of andere klassen — alleen bovenstaande
 
-FORMAT VOOR DE OUTPUT:
-Geef ALLEEN de volgende drie blokken terug, niets anders:
+GEEF EXACT DEZE DRIE BLOKKEN TERUG:
 
 [META_DESCRIPTION]
-Jouw meta description hier (max 155 tekens)
+max 155 tekens hier
 [/META_DESCRIPTION]
 
-[KEYWORDS]
-keyword1, keyword2, keyword3, keyword4, keyword5
-[/KEYWORDS]
+[TAG]
+Één woord als categorie (bijv: Investering, Bordeaux, Strategie, Fiscaal, Bourgogne)
+[/TAG]
 
 [CONTENT]
-De volledige HTML-inhoud van het artikel hier (alleen de inhoud binnen <article>, geen <html>/<head>/<body>)
-Gebruik: <h2>, <h3>, <p>, <ul>, <ol>, <table>, <strong>, <em>
-Gebruik klasse "highlight-box" voor de tip-box, "cta-box" voor de CTA, "data-table" voor tabellen
+Alleen de HTML-inhoud voor binnen <div class="post-body"> — dus alleen <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, en <div class="pull-quote">
 [/CONTENT]
 """
 
-    print(f"  ✍️  Claude schrijft artikel: '{topic['title_1']}'...")
+    print(f"  Claude schrijft: '{topic['title_1']}'...")
     message = client.messages.create(
         model="claude-opus-4-5",
         max_tokens=4000,
@@ -159,59 +122,54 @@ Gebruik klasse "highlight-box" voor de tip-box, "cta-box" voor de CTA, "data-tab
     return message.content[0].text
 
 
-# ─── Helper: parse Claude's response ─────────────────────
 def parse_claude_response(raw_text):
     def extract(tag, text):
         pattern = rf"\[{tag}\](.*?)\[/{tag}\]"
         match = re.search(pattern, text, re.DOTALL)
         return match.group(1).strip() if match else ""
-
     return {
         "meta_description": extract("META_DESCRIPTION", raw_text),
-        "keywords":         extract("KEYWORDS", raw_text),
+        "tag":              extract("TAG", raw_text) or "Investering",
         "content":          extract("CONTENT", raw_text)
     }
 
 
-# ─── Helper: build the full HTML page ────────────────────
 def build_html_page(topic, parsed, image, publish_date):
     """
-    This function assembles all the pieces into a complete HTML file:
-    - SEO meta tags (so Google can understand the page)
-    - Open Graph tags (so Facebook/LinkedIn show a nice preview)
-    - Schema markup (structured data that Google loves)
-    - The article content Claude wrote
+    Builds a blog post page that exactly matches the style of the
+    existing cavea-site posts (dark theme, Playfair Display + Raleway fonts,
+    gold accents, same nav/footer structure).
     """
-    depth = "../"  # Adjust if blog posts are at root level
+    # Format date in Dutch
+    months = ["januari","februari","maart","april","mei","juni",
+              "juli","augustus","september","oktober","november","december"]
+    d = datetime.date.fromisoformat(publish_date)
+    date_nl = f"{d.day} {months[d.month-1]} {d.year}"
 
     return f"""<!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- SEO META TAGS -->
-  <title>{topic['title_1']} | Cavea</title>
-  <meta name="description" content="{parsed['meta_description']}" />
-  <meta name="keywords" content="{parsed['keywords']}" />
-  <meta name="author" content="Cavea" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{topic['title_1']} — Cavea</title>
+  <meta name="description" content="{parsed['meta_description']}">
   <link rel="canonical" href="{SITE_URL}/{BLOG_FOLDER}/{topic['slug']}.html" />
 
-  <!-- OPEN GRAPH -->
-  <meta property="og:title" content="{topic['title_1']}" />
-  <meta property="og:description" content="{parsed['meta_description']}" />
-  <meta property="og:image" content="{image['url']}" />
-  <meta property="og:url" content="{SITE_URL}/{BLOG_FOLDER}/{topic['slug']}.html" />
-  <meta property="og:type" content="article" />
-  <meta property="og:site_name" content="Cavea" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="{topic['title_1']}">
+  <meta property="og:description" content="{parsed['meta_description']}">
+  <meta property="og:image" content="{image['url']}">
+  <meta property="og:url" content="{SITE_URL}/{BLOG_FOLDER}/{topic['slug']}.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Cavea">
 
-  <!-- TWITTER CARD -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{topic['title_1']}" />
-  <meta name="twitter:description" content="{parsed['meta_description']}" />
-  <meta name="twitter:image" content="{image['url']}" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{topic['title_1']}">
+  <meta name="twitter:description" content="{parsed['meta_description']}">
+  <meta name="twitter:image" content="{image['url']}">
 
-  <!-- SCHEMA MARKUP -->
+  <!-- Schema Markup -->
   <script type="application/ld+json">
   {{
     "@context": "https://schema.org",
@@ -220,110 +178,155 @@ def build_html_page(topic, parsed, image, publish_date):
     "description": "{parsed['meta_description']}",
     "image": "{image['url']}",
     "author": {{"@type": "Organization", "name": "Cavea"}},
-    "publisher": {{
-      "@type": "Organization",
-      "name": "Cavea",
-      "logo": {{"@type": "ImageObject", "url": "{SITE_URL}/images/logo.png"}}
-    }},
+    "publisher": {{"@type": "Organization", "name": "Cavea"}},
     "datePublished": "{publish_date}",
     "dateModified": "{publish_date}",
     "mainEntityOfPage": {{"@type": "WebPage", "@id": "{SITE_URL}/{BLOG_FOLDER}/{topic['slug']}.html"}}
   }}
   </script>
 
-  <link rel="stylesheet" href="{depth}css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Raleway:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    .blog-hero {{width:100%;max-height:480px;object-fit:cover;border-radius:8px;margin-bottom:2rem;}}
-    .blog-article {{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem;font-family:'Georgia',serif;color:#1a1a1a;line-height:1.8;}}
-    .blog-article h1 {{font-size:2.2rem;font-weight:700;margin-bottom:.5rem;color:#1a1a1a;}}
-    .blog-meta {{color:#777;font-size:.9rem;margin-bottom:2rem;font-family:sans-serif;}}
-    .blog-meta span {{margin-right:1.5rem;}}
-    .blog-article h2 {{font-size:1.5rem;font-weight:700;margin:2.5rem 0 1rem;color:#2c1a0e;border-left:4px solid #8b1a1a;padding-left:.75rem;}}
-    .blog-article h3 {{font-size:1.2rem;font-weight:700;margin:1.8rem 0 .75rem;color:#3a2a1a;}}
-    .blog-article p {{margin-bottom:1.4rem;}}
-    .blog-article ul,.blog-article ol {{margin:0 0 1.4rem 1.5rem;}}
-    .blog-article li {{margin-bottom:.5rem;}}
-    .highlight-box {{background:#fdf6f0;border:1px solid #e8d5c4;border-left:5px solid #8b1a1a;padding:1.25rem 1.5rem;border-radius:6px;margin:2rem 0;}}
-    .highlight-box p {{margin:0;font-style:italic;color:#5a3a2a;}}
-    .cta-box {{background:#2c1a0e;color:#fff;padding:2rem;border-radius:8px;text-align:center;margin:3rem 0;}}
-    .cta-box h3 {{color:#f0d9c0;margin:0 0 .75rem;font-size:1.3rem;}}
-    .cta-box p {{color:#d4b896;margin-bottom:1.25rem;}}
-    .cta-btn {{display:inline-block;background:#8b1a1a;color:#fff;padding:.75rem 2rem;border-radius:4px;text-decoration:none;font-weight:700;font-family:sans-serif;}}
-    .cta-btn:hover {{background:#a52020;}}
-    .data-table {{width:100%;border-collapse:collapse;margin:1.5rem 0 2rem;font-size:.95rem;font-family:sans-serif;}}
-    .data-table th {{background:#2c1a0e;color:#fff;padding:.75rem 1rem;text-align:left;}}
-    .data-table td {{padding:.65rem 1rem;border-bottom:1px solid #e8d5c4;}}
-    .data-table tr:nth-child(even) td {{background:#fdf6f0;}}
-    .tag-list {{display:flex;flex-wrap:wrap;gap:.5rem;margin:2rem 0 0;font-family:sans-serif;}}
-    .tag {{background:#f0ebe5;color:#5a3a2a;padding:.3rem .75rem;border-radius:20px;font-size:.82rem;}}
+    *,*::before,*::after{{margin:0;padding:0;box-sizing:border-box}}
+    :root{{--bg:#080808;--surface:#0f0f0f;--card:#141414;--border:#252525;--border-lt:#333;--muted:#888;--body:#ccc;--heading:#f0ece4;--white:#faf8f2;--gold:#c4a24e;--gold-br:#dab756;--gold-dm:#9a7e36;--serif:'Playfair Display',Georgia,serif;--sans:'Raleway','Segoe UI',sans-serif}}
+    html{{scroll-behavior:smooth}}
+    body{{background:var(--bg);color:var(--body);font-family:var(--sans);font-weight:300;font-size:16px;line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased}}
+    nav{{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:1.5rem 5%;background:rgba(8,8,8,.97);backdrop-filter:blur(24px);box-shadow:0 1px 0 var(--border)}}
+    .logo-link{{display:inline-block;text-decoration:none}}.logo-img{{height:44px;width:auto;display:block}}
+    .nav-links{{display:flex;gap:2.2rem;align-items:center}}
+    .nav-links a{{color:var(--body);text-decoration:none;font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;transition:color .3s}}
+    .nav-links a:hover,.nav-links a.active{{color:var(--gold)}}
+    .nav-cta{{background:var(--gold)!important;color:var(--bg)!important;padding:.65rem 1.8rem!important;font-weight:700!important;letter-spacing:.12em!important}}
+    .mob-toggle{{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}}
+    .mob-toggle span{{display:block;width:22px;height:1.5px;background:var(--heading)}}
+    .post-hero{{position:relative;height:55vh;min-height:380px;overflow:hidden;margin-top:76px}}
+    .post-hero img{{width:100%;height:100%;object-fit:cover;filter:brightness(.65)}}
+    .post-hero-overlay{{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(8,8,8,.9) 100%)}}
+    .back-link{{display:block;max-width:780px;margin:2.5rem auto 0;padding:0 5%;color:var(--muted);text-decoration:none;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;transition:color .3s}}
+    .back-link:hover{{color:var(--gold)}}
+    .post-header{{max-width:780px;margin:0 auto;padding:2rem 5% 0}}
+    .post-tag{{font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:block}}
+    .post-title{{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,3rem);font-weight:400;color:var(--heading);line-height:1.2;margin-bottom:1.2rem}}
+    .post-meta{{font-size:.78rem;color:var(--muted);display:flex;gap:1.5rem;flex-wrap:wrap;padding-bottom:2rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem}}
+    .post-body{{max-width:780px;margin:0 auto;padding:0 5% 5rem}}
+    .post-body h2{{font-family:var(--serif);font-size:1.6rem;font-weight:400;color:var(--heading);margin:2.8rem 0 1rem;line-height:1.3}}
+    .post-body h3{{font-family:var(--serif);font-size:1.2rem;font-weight:500;color:var(--heading);margin:2rem 0 .8rem}}
+    .post-body p{{color:var(--body);line-height:1.85;margin-bottom:1.4rem;font-size:.97rem}}
+    .post-body ul,.post-body ol{{color:var(--body);padding-left:1.5rem;margin-bottom:1.4rem}}
+    .post-body li{{margin-bottom:.6rem;line-height:1.75;font-size:.97rem}}
+    .post-body strong{{color:var(--heading);font-weight:600}}
+    .pull-quote{{border-left:3px solid var(--gold);padding:1.5rem 2rem;margin:2.5rem 0;background:var(--surface)}}
+    .pull-quote p{{font-family:var(--serif);font-style:italic;font-size:1.12rem;color:var(--heading);line-height:1.6;margin:0}}
+    .post-cta{{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4.5rem 5%;text-align:center}}
+    .post-cta h3{{font-family:var(--serif);font-size:1.9rem;color:var(--heading);margin-bottom:.8rem}}
+    .post-cta p{{color:var(--muted);margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto;font-size:.95rem}}
+    .post-cta a{{display:inline-block;background:var(--gold);color:var(--bg);font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:1rem 2.8rem;text-decoration:none;transition:all .3s}}
+    .post-cta a:hover{{background:var(--gold-br);transform:translateY(-2px)}}
+    footer{{background:var(--surface);border-top:1px solid var(--border);padding:4rem 5% 2rem}}
+    .ft-in{{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:3rem;max-width:1280px;margin:0 auto}}
+    .ft-brand p{{font-size:.85rem;color:var(--muted);line-height:1.75;max-width:300px;margin-top:.8rem}}
+    .ft-col h4{{font-size:.6rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--heading);margin-bottom:1.3rem}}
+    .ft-col a{{display:block;color:var(--muted);text-decoration:none;font-size:.88rem;margin-bottom:.65rem;transition:color .3s}}
+    .ft-col a:hover{{color:var(--gold)}}
+    .ft-bot{{max-width:1280px;margin:3rem auto 0;padding-top:2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}}
+    @media(max-width:768px){{.nav-links{{display:none}}.mob-toggle{{display:flex}}.ft-in{{grid-template-columns:1fr 1fr}}}}
+    @media(max-width:480px){{.ft-in{{grid-template-columns:1fr}}}}
   </style>
 </head>
 <body>
 
-  <nav><!-- Jouw bestaande navigatie --></nav>
+<nav>
+  <a href="../index.html" class="logo-link"><img src="../logo.svg" alt="Cavea" class="logo-img"></a>
+  <div class="nav-links">
+    <a href="../index.html#pillars">Waarom Cavea</a>
+    <a href="../index.html#producers">Wijnhuizen</a>
+    <a href="../index.html#how">Hoe het werkt</a>
+    <a href="../blog.html" class="active">Blog</a>
+    <a href="../index.html#signup" class="nav-cta">Lid worden</a>
+  </div>
+  <button class="mob-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
 
-  <main>
-    <article class="blog-article">
-      <img class="blog-hero" src="{image['url']}" alt="{image['alt']}" loading="lazy" />
-      <h1>{topic['title_1']}</h1>
-      <div class="blog-meta">
-        <span>📅 {publish_date}</span>
-        <span>✍️ Cavea Redactie</span>
-        <span>⏱️ 8 minuten lezen</span>
-      </div>
+<div class="post-hero">
+  <img src="{image['url']}" alt="{image['alt']}">
+  <div class="post-hero-overlay"></div>
+</div>
 
-      {parsed['content']}
+<a href="../blog.html" class="back-link">← Terug naar blog</a>
 
-      <div class="tag-list">
-        {"".join(f'<span class="tag">{kw.strip()}</span>' for kw in parsed["keywords"].split(",")[:6])}
-      </div>
-    </article>
-  </main>
+<div class="post-header">
+  <span class="post-tag">{parsed['tag']}</span>
+  <h1 class="post-title">{topic['title_1']}</h1>
+  <div class="post-meta">
+    <span>{date_nl}</span>
+    <span>Door Cavea</span>
+    <span>8 min leestijd</span>
+  </div>
+</div>
 
-  <footer><!-- Jouw bestaande footer --></footer>
+<div class="post-body">
+{parsed['content']}
+</div>
+
+<div class="post-cta">
+  <h3>Klaar om te beginnen?</h3>
+  <p>Vraag toegang aan als founding member en ontvang als eerste onze exclusieve wijn-drops — plus een persoonlijk onboardinggesprek met onze sommelier.</p>
+  <a href="../index.html#signup">Vraag toegang aan</a>
+</div>
+
+<footer>
+  <div class="ft-in">
+    <div class="ft-brand">
+      <a href="../index.html" class="logo-link"><img src="../logo.svg" alt="Cavea" class="logo-img" style="height:40px"></a>
+      <p>Exclusieve toegang tot de zeldzaamste wijnen ter wereld.</p>
+    </div>
+    <div class="ft-col"><h4>Navigatie</h4><a href="../index.html#pillars">Waarom Cavea</a><a href="../index.html#producers">Wijnhuizen</a><a href="../blog.html">Blog</a><a href="../index.html#signup">Lid worden</a></div>
+    <div class="ft-col"><h4>Artikelen</h4><a href="wijninvestering-101.html">Startersgids</a><a href="wijn-als-belegging.html">Fiscale voordelen</a><a href="exclusieve-wijn-kopen.html">Adressen</a><a href="sassicaia-kopen.html">Sassicaia</a></div>
+    <div class="ft-col"><h4>Contact</h4><a href="mailto:info@cavea.wine">info@cavea.wine</a><a href="#">Instagram</a></div>
+  </div>
+  <div class="ft-bot"><span>&copy; 2025 Cavea. Alle rechten voorbehouden.</span><span>Drinken met mate. 18+</span></div>
+</footer>
+
+<script>
+  window.addEventListener('scroll',()=>document.querySelector('nav').classList.toggle('slim',window.scrollY>60));
+</script>
 </body>
 </html>"""
 
 
-# ─── MAIN: generate one blog post ────────────────────────
 def generate_one_post():
     topic, all_topics = get_next_topic()
     if not topic:
-        print("✅ Alle blogposts zijn al gepubliceerd!")
+        print("Alle blogposts zijn al gepubliceerd!")
         return None
 
-    print(f"\n📝 Volgende blogpost: '{topic['title_1']}'")
+    print(f"\nVolgende blogpost: '{topic['title_1']}'")
 
-    # 1. Fetch image
-    print("  🖼️  Zoekt wijnfoto op Pexels...")
     image = fetch_wine_image(f"fine wine {topic['short_tail']}")
-
-    # 2. Generate content via Claude
-    raw = generate_blog_content(topic)
+    raw   = generate_blog_content(topic)
     parsed = parse_claude_response(raw)
 
     if not parsed["content"]:
-        print("  ❌ Claude gaf geen bruikbare inhoud terug. Probeer opnieuw.")
+        print("Geen inhoud gegenereerd. Probeer opnieuw.")
         return None
 
-    # 3. Build HTML
     publish_date = datetime.date.today().isoformat()
     html = build_html_page(topic, parsed, image, publish_date)
 
-    # 4. Save file
     output_path = os.path.join(POSTS_DIR, f"{topic['slug']}.html")
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"  💾 Opgeslagen: {output_path}")
+    print(f"Opgeslagen: {output_path}")
 
-    # 5. Mark as published
     mark_topic_published(all_topics, topic["id"])
-    print(f"  ✅ Onderwerp #{topic['id']} gemarkeerd als gepubliceerd.")
-
-    return {"topic": topic, "file": output_path, "publish_date": publish_date}
+    return {"topic": topic, "file": output_path, "publish_date": publish_date,
+            "image_url": image["url"], "meta_description": parsed["meta_description"], "tag": parsed["tag"]}
 
 
 if __name__ == "__main__":
     result = generate_one_post()
     if result:
-        print(f"\n🎉 Klaar! Blogpost aangemaakt: {result['file']}")
+        print(f"\nKlaar! Blogpost aangemaakt: {result['file']}")
