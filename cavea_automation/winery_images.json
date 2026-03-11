@@ -124,5 +124,47 @@
     "region": "Bordeaux — Pauillac",
     "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Pauillac_Ch%C3%A2teau_Lynch-Bages.JPG/1280px-Pauillac_Ch%C3%A2teau_Lynch-Bages.JPG",
     "alt": "Château Lynch-Bages, Cinquième Grand Cru Classé, Pauillac"
+  },
+  {
+    "id": "bordeaux-bottles-collection",
+    "estate": "Bordeaux Grands Crus",
+    "region": "Bordeaux",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Several_Bordeaux_wines.jpg/1920px-Several_Bordeaux_wines.jpg",
+    "alt": "Collection de Grands Crus de Bordeaux — Latour, Haut-Brion, l'Evangile"
+  },
+  {
+    "id": "bordeaux-bottle-glass",
+    "estate": "Bordeaux Blend",
+    "region": "Bordeaux",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Bottle_%26_glass_of_red_Bordeaux_style_blend.jpg/1920px-Bottle_%26_glass_of_red_Bordeaux_style_blend.jpg",
+    "alt": "Fles en glas rode Bordeaux wijn"
+  },
+  {
+    "id": "barrel-room-cellar",
+    "estate": "Wijnkelder",
+    "region": "Napa Valley",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Barrel_room_at_Merryvale.jpg/1920px-Barrel_room_at_Merryvale.jpg",
+    "alt": "Exclusieve wijnkelder met eikenhouten vaten"
+  },
+  {
+    "id": "porto-wine-cellar",
+    "estate": "Porto Wijnhuis",
+    "region": "Porto — Douro",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/2014-P142_Porto_%2815523796449%29.jpg/1920px-2014-P142_Porto_%2815523796449%29.jpg",
+    "alt": "Historische wijnkelder in Porto, Douro-vallei"
+  },
+  {
+    "id": "chateau-cormeil-figeac",
+    "estate": "Château Cormeil-Figeac",
+    "region": "Bordeaux — Saint-Émilion",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Chateau_Cormeil-Figeac_Bordeaux_wine.JPG/1920px-Chateau_Cormeil-Figeac_Bordeaux_wine.JPG",
+    "alt": "Château Cormeil-Figeac, Bordeaux wijn met glas"
+  },
+  {
+    "id": "wine-pouring-red",
+    "estate": "Rode Wijn",
+    "region": "Bordeaux",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Pouring_red_wine_into_a_glass.jpg/1280px-Pouring_red_wine_into_a_glass.jpg",
+    "alt": "Rode wijn inschenken in een kristallen glas"
   }
 ]
