@@ -396,3 +396,4 @@ if __name__ == "__main__":
     result = generate_one_post()
     if result:
         print(f"\nKlaar! Blogpost aangemaakt: {result['file']}")
+
