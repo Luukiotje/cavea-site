@@ -158,10 +158,11 @@ def run(topic_id=None, dry_run=False):
     print(f"   Slug:      {topic['slug']}")
     print(f"   Status:    {topic.get('status', 'pending')}")
 
-    # 2. Fetch a UNIQUE image (no duplicates across posts)
-    print("\n🖼️  Zoekt unieke relevante foto...")
+    # 2. Select a winery image from curated library (no duplicates)
+    print("\n🖼️  Selecteert wijnhuisfoto...")
     image = fetch_wine_image(topic['short_tail'])
-    print(f"   Foto URL: {image['url'][:60]}...")
+    print(f"   Foto: {image['alt']}")
+    print(f"   URL:  {image['url'][:60]}...")
 
     # 3. Generate content with Claude AI
     print("\n✍️  Claude schrijft het artikel...")

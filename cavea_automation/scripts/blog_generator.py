@@ -1,13 +1,14 @@
 """
-CAVEA BLOG AUTOMATION — BLOG GENERATOR (v3 — unique images, no duplicates)
+CAVEA BLOG AUTOMATION — BLOG GENERATOR (v4 — curated winery images)
 Generates SEO-optimized HTML blog posts using Claude AI,
-fetches a UNIQUE wine photo per article, and outputs HTML matching cavea-site's style.
+uses REAL photos of top domaines from Wikimedia Commons,
+and outputs HTML matching cavea-site's style.
 
-CHANGES in v3:
-- Pexels image search uses random page + picks from multiple results
-- Tracks used image IDs in used_images.json to prevent duplicates
-- Better search queries for luxury/exclusive wine imagery
-- Updates Excel tracking file when a post is published
+CHANGES in v4:
+- Replaced Pexels API with curated winery_images.json library
+- Images show actual châteaux/domaines from Bordeaux, Bourgogne, Rhône, Toscane
+- Each blog post gets a random domaine image (no duplicates)
+- No more external API dependency for images
 """
 
 import json
@@ -29,22 +30,23 @@ with open(CONFIG_PATH) as f:
     config = json.load(f)
 
 ANTHROPIC_API_KEY = config["anthropic_api_key"]
-PEXELS_API_KEY    = config["pexels_api_key"]
 SITE_URL          = config["site_url"]
 BLOG_FOLDER       = config["blog_folder"]
 
 
-# ─── Image tracking: prevents re-using the same Pexels photo ───
+# ─── Image tracking: prevents re-using the same winery photo ───
+
+WINERY_IMAGES_PATH = os.path.join(BASE_DIR, "winery_images.json")
 
 def load_used_images():
-    """Load list of Pexels photo IDs that have already been used."""
+    """Load list of winery image IDs that have already been used."""
     if os.path.exists(IMAGES_PATH):
         with open(IMAGES_PATH) as f:
             return json.load(f)
     return []
 
 def save_used_images(used_ids):
-    """Save the updated list of used Pexels photo IDs."""
+    """Save the updated list of used winery image IDs."""
     with open(IMAGES_PATH, "w") as f:
         json.dump(used_ids, f)
 
@@ -69,91 +71,43 @@ def mark_topic_published(topics, topic_id):
         json.dump(topics, f, ensure_ascii=False, indent=2)
 
 
-# ─── Image fetching with deduplication ───
-
-# Pre-defined luxury wine search queries for better, more exclusive images
-WINE_QUERIES = [
-    "wine cellar dark luxury",
-    "red wine bottle elegant",
-    "wine barrel oak cellar",
-    "vineyard sunset luxury",
-    "sommelier wine tasting",
-    "wine glass dark background",
-    "wine collection cellar",
-    "bordeaux wine vintage",
-    "wine decanter elegant",
-    "premium wine dark",
-    "wine aging cellar barrels",
-    "wine pouring elegant glass",
-]
+# ─── Image selection from curated winery library ───
 
 def fetch_wine_image(topic_query="fine wine"):
     """
-    Fetches a UNIQUE wine image from Pexels.
-    - Uses varied search queries for better, more exclusive-looking results
-    - Fetches 15 results per search and picks one that hasn't been used before
+    Selects a UNIQUE winery image from the curated winery_images.json library.
+    - Uses real photos of top domaines (Château Margaux, Haut-Brion, Pétrus, etc.)
+    - All images are from Wikimedia Commons (royalty-free)
     - Tracks used image IDs to prevent duplicates across blog posts
+    - When all images are used, resets and starts over
     """
-    if not PEXELS_API_KEY or PEXELS_API_KEY == "YOUR_PEXELS_API_KEY":
-        return {
-            "url": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1400&q=85&auto=format&fit=crop",
-            "alt": "Exclusieve wijnflessen in een kelder"
-        }
-
     used_ids = load_used_images()
-    headers = {"Authorization": PEXELS_API_KEY}
 
-    # Try multiple search queries to find a unique, high-quality image
-    queries_to_try = [
-        f"luxury wine {topic_query}",
-        random.choice(WINE_QUERIES),
-        f"wine {topic_query} elegant",
-        "fine wine cellar dark",
-        "premium red wine bottle",
-    ]
+    # Load the curated winery images library
+    with open(WINERY_IMAGES_PATH) as f:
+        winery_images = json.load(f)
 
-    for query in queries_to_try:
-        try:
-            # Fetch up to 15 results, from a random page (1-3)
-            page = random.randint(1, 3)
-            params = {
-                "query": query,
-                "per_page": 15,
-                "page": page,
-                "orientation": "landscape"
-            }
-            resp = requests.get(
-                "https://api.pexels.com/v1/search",
-                headers=headers, params=params, timeout=10
-            )
-            data = resp.json()
+    # Find images that haven't been used yet
+    available = [img for img in winery_images if img["id"] not in used_ids]
 
-            if data.get("photos"):
-                # Shuffle the results so we don't always pick the same one
-                photos = data["photos"]
-                random.shuffle(photos)
+    # If all images have been used, reset the tracker
+    if not available:
+        print("  Alle wijnhuisfoto's zijn gebruikt — tracker wordt gereset.")
+        used_ids = []
+        available = winery_images
 
-                # Find a photo that hasn't been used before
-                for photo in photos:
-                    if photo["id"] not in used_ids:
-                        # Found a unique image! Save it and return
-                        used_ids.append(photo["id"])
-                        save_used_images(used_ids)
-                        print(f"  Pexels: uniek beeld gevonden (ID {photo['id']}) via '{query}'")
-                        return {
-                            "url": photo["src"]["large2x"],
-                            "alt": photo.get("alt", f"Wijnfoto: {topic_query}")
-                        }
+    # Shuffle and pick one
+    random.shuffle(available)
+    chosen = available[0]
 
-        except Exception as e:
-            print(f"  Pexels fout bij '{query}': {e}")
-            continue
+    # Track this image as used
+    used_ids.append(chosen["id"])
+    save_used_images(used_ids)
 
-    # Absolute fallback: use an Unsplash image
-    print("  Waarschuwing: geen unieke Pexels-afbeelding gevonden, gebruik fallback")
+    print(f"  Wijnhuis: {chosen['estate']} ({chosen['region']})")
     return {
-        "url": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1400&q=85&auto=format&fit=crop",
-        "alt": "Exclusieve wijnflessen in een kelder"
+        "url": chosen["url"],
+        "alt": chosen["alt"]
     }
 
 

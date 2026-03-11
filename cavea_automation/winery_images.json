@@ -1,0 +1,128 @@
+[
+  {
+    "id": "chateau-margaux",
+    "estate": "Château Margaux",
+    "region": "Bordeaux — Margaux",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Ch%C3%A2teau_Margaux_2014.JPG/1280px-Ch%C3%A2teau_Margaux_2014.JPG",
+    "alt": "Château Margaux, Premier Grand Cru Classé, Margaux"
+  },
+  {
+    "id": "chateau-haut-brion",
+    "estate": "Château Haut-Brion",
+    "region": "Bordeaux — Pessac-Léognan",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Pessac_Ch%C3%A2teau_Haut-Brion.jpg/1280px-Pessac_Ch%C3%A2teau_Haut-Brion.jpg",
+    "alt": "Château Haut-Brion, Premier Grand Cru Classé, Pessac-Léognan"
+  },
+  {
+    "id": "chateau-petrus",
+    "estate": "Pétrus",
+    "region": "Bordeaux — Pomerol",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/P%C3%A9trus_%28ch%C3%A2teau%29_03.jpg/1280px-P%C3%A9trus_%28ch%C3%A2teau%29_03.jpg",
+    "alt": "Château Pétrus, Pomerol"
+  },
+  {
+    "id": "chateau-latour",
+    "estate": "Château Latour",
+    "region": "Bordeaux — Pauillac",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Chateau_Latour_01.jpg",
+    "alt": "Château Latour, Premier Grand Cru Classé, Pauillac"
+  },
+  {
+    "id": "chateau-mouton-rothschild",
+    "estate": "Château Mouton Rothschild",
+    "region": "Bordeaux — Pauillac",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pauillac_Ch%C3%A2teau_Mouton_Rothschild.jpg/1280px-Pauillac_Ch%C3%A2teau_Mouton_Rothschild.jpg",
+    "alt": "Château Mouton Rothschild, Premier Grand Cru Classé, Pauillac"
+  },
+  {
+    "id": "chateau-lafite-rothschild",
+    "estate": "Château Lafite Rothschild",
+    "region": "Bordeaux — Pauillac",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Lafite_Rothschild_02.jpg/1280px-Lafite_Rothschild_02.jpg",
+    "alt": "Château Lafite Rothschild, Premier Grand Cru Classé, Pauillac"
+  },
+  {
+    "id": "chateau-cheval-blanc",
+    "estate": "Château Cheval Blanc",
+    "region": "Bordeaux — Saint-Émilion",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/ChevalBlanc07.jpg/1280px-ChevalBlanc07.jpg",
+    "alt": "Château Cheval Blanc, Premier Grand Cru Classé A, Saint-Émilion"
+  },
+  {
+    "id": "chateau-dyquem",
+    "estate": "Château d'Yquem",
+    "region": "Bordeaux — Sauternes",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Ch%C3%A2teau_d%27Yquem.jpg/1280px-Ch%C3%A2teau_d%27Yquem.jpg",
+    "alt": "Château d'Yquem, Premier Cru Supérieur, Sauternes"
+  },
+  {
+    "id": "chateau-angelus",
+    "estate": "Château Angélus",
+    "region": "Bordeaux — Saint-Émilion",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Ch%C3%A2teau_Ang%C3%A9lus_J1_1992.jpg/1280px-Ch%C3%A2teau_Ang%C3%A9lus_J1_1992.jpg",
+    "alt": "Château Angélus, Premier Grand Cru Classé A, Saint-Émilion"
+  },
+  {
+    "id": "chateau-beychevelle",
+    "estate": "Château Beychevelle",
+    "region": "Bordeaux — Saint-Julien",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Ch%C3%A2teau_Beychevelle_-_aile.jpg/1280px-Ch%C3%A2teau_Beychevelle_-_aile.jpg",
+    "alt": "Château Beychevelle, Quatrième Grand Cru Classé, Saint-Julien"
+  },
+  {
+    "id": "chateau-calon-segur",
+    "estate": "Château Calon-Ségur",
+    "region": "Bordeaux — Saint-Estèphe",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Chateau_calon_segur_-_st_estephe.jpg",
+    "alt": "Château Calon-Ségur, Troisième Grand Cru Classé, Saint-Estèphe"
+  },
+  {
+    "id": "chateau-gruaud-larose",
+    "estate": "Château Gruaud Larose",
+    "region": "Bordeaux — Saint-Julien",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Ch%C3%A2teau_Gruaud-Larose.jpg/1280px-Ch%C3%A2teau_Gruaud-Larose.jpg",
+    "alt": "Château Gruaud Larose, Deuxième Grand Cru Classé, Saint-Julien"
+  },
+  {
+    "id": "chateau-pape-clement",
+    "estate": "Château Pape Clément",
+    "region": "Bordeaux — Pessac-Léognan",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Pessac_-_ch%C3%A2teau_Pape-Cl%C3%A9ment_-_3.jpg/1280px-Pessac_-_ch%C3%A2teau_Pape-Cl%C3%A9ment_-_3.jpg",
+    "alt": "Château Pape Clément, Cru Classé, Pessac-Léognan"
+  },
+  {
+    "id": "chateau-beaucastel",
+    "estate": "Château de Beaucastel",
+    "region": "Rhône — Châteauneuf-du-Pape",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ch%C3%A2teau_de_Beaucastel.jpg/1280px-Ch%C3%A2teau_de_Beaucastel.jpg",
+    "alt": "Château de Beaucastel, Châteauneuf-du-Pape"
+  },
+  {
+    "id": "clos-de-vougeot",
+    "estate": "Clos de Vougeot",
+    "region": "Bourgogne — Côte de Nuits",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Chateau_du_clos_de_Vougeot_2.JPG/1280px-Chateau_du_clos_de_Vougeot_2.JPG",
+    "alt": "Château du Clos de Vougeot, Bourgogne"
+  },
+  {
+    "id": "romanee-conti",
+    "estate": "Domaine de la Romanée-Conti",
+    "region": "Bourgogne — Vosne-Romanée",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Domaine_de_la_Roman%C3%A9e-conti_010.JPG/1280px-Domaine_de_la_Roman%C3%A9e-conti_010.JPG",
+    "alt": "Domaine de la Romanée-Conti, Vosne-Romanée, Bourgogne"
+  },
+  {
+    "id": "bolgheri-sassicaia",
+    "estate": "Tenuta San Guido (Sassicaia)",
+    "region": "Toscane — Bolgheri",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Viale_dei_Cipressi%2C_Bolgheri%2C_Castagneto_Carducci.JPG/1280px-Viale_dei_Cipressi%2C_Bolgheri%2C_Castagneto_Carducci.JPG",
+    "alt": "Viale dei Cipressi, Bolgheri — thuis van Sassicaia"
+  },
+  {
+    "id": "chateau-lynch-bages",
+    "estate": "Château Lynch-Bages",
+    "region": "Bordeaux — Pauillac",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Pauillac_Ch%C3%A2teau_Lynch-Bages.JPG/1280px-Pauillac_Ch%C3%A2teau_Lynch-Bages.JPG",
+    "alt": "Château Lynch-Bages, Cinquième Grand Cru Classé, Pauillac"
+  }
+]
