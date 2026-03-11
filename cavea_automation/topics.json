@@ -41,7 +41,8 @@
     "slug": "sassicaia-kopen-investering",
     "short_tail": "Sassicaia kopen",
     "keyword_focus": "Investering in Sassicaia",
-    "status": "pending"
+    "status": "published",
+    "published_date": "2026-03-11"
   },
   {
     "id": 6,
@@ -49,7 +50,8 @@
     "slug": "allocatiewijn-strategieen",
     "short_tail": "Allocatiewijn",
     "keyword_focus": "Strategieën voor allocaties",
-    "status": "pending"
+    "status": "published",
+    "published_date": "2026-03-11"
   },
   {
     "id": 7,
@@ -57,7 +59,8 @@
     "slug": "wijnportefeuille-samenstellen-diversificatie",
     "short_tail": "Wijnportefeuille",
     "keyword_focus": "Samenstellen en diversificatie",
-    "status": "pending"
+    "status": "published",
+    "published_date": "2026-03-11"
   },
   {
     "id": 8,
