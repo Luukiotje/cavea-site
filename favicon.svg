@@ -1,0 +1,19 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark background -->
+  <rect width="64" height="64" fill="#080808"/>
+
+  <!-- Wine glass silhouette -->
+  <!-- Bowl of glass -->
+  <path d="M 22 12 Q 22 28 28 34 L 36 34 Q 42 28 42 12 Z"
+        fill="none" stroke="#c4a24e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Stem -->
+  <line x1="32" y1="34" x2="32" y2="46" stroke="#c4a24e" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Base -->
+  <ellipse cx="32" cy="48" rx="6" ry="2" fill="none" stroke="#c4a24e" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Subtle accent line on the glass -->
+  <path d="M 24 18 Q 32 16 40 18"
+        fill="none" stroke="#c4a24e" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+</svg>
